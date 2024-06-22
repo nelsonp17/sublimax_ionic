@@ -9,6 +9,7 @@
 defineProps({
   name: String,
 });
+//const url = import.meta.env.VITE_SUPABASE_KEY;
 </script>
 
 <style scoped>

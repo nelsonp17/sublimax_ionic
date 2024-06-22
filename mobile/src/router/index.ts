@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import TabsPage from '../views/TabsPage.vue'
+import Environment from '../views/operations/Environment.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -28,6 +29,18 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Tab3Page.vue')
       }
     ]
+  },
+  {
+    path: '/environment/',
+    component: Environment,
+  },
+  {
+    path: '/categorys/',
+    component: () => import('@/views/operations/Category.vue'),
+  },
+  {
+    path: '/subcategorys/',
+    component: () => import('@/views/operations/Subcategory.vue'),
   }
 ]
 

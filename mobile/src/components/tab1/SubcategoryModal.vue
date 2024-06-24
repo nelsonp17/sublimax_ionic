@@ -52,8 +52,7 @@
 	import { caretDownSharp } from 'ionicons/icons';
 	import { onMounted, ref } from 'vue';
 	import { supabase } from '@/utils/supabase';
-	import { formValidCategory } from '@/utils/formValid';
-	import Category from '@/views/operations/Category.vue';
+	import { formValidSubcategory } from '@/utils/formValid';
 
 	const props = defineProps({
 		id: Number,
@@ -64,7 +63,7 @@
 
 	const form = ref({
 		name: '',
-		selectedCategory: '',
+		selectedCategory: 0,
 	});
 	let errorsForm = ref('');
 	let isInsert = true;
@@ -136,7 +135,7 @@
 	const cancel = () => modalController.dismiss(null, 'cancel');
 	const confirm = async () => {
 		errorsForm.value = '';
-		const validate = await formValidCategory(form.value);
+		const validate = await formValidSubcategory(form.value);
 
 		console.log(validate)
 		if(validate != true){

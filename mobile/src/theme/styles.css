@@ -1,121 +1,143 @@
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap");
 .titillium-web-extralight {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 200;
-    font-style: normal;
-  }
-  
-  .titillium-web-light {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 300;
-    font-style: normal;
-  }
-  
-  .titillium-web-regular {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  .titillium-web-semibold {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-  }
-  
-  .titillium-web-bold {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
-  
-  .titillium-web-black {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 900;
-    font-style: normal;
-  }
-  
-  .titillium-web-extralight-italic {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 200;
-    font-style: italic;
-  }
-  
-  .titillium-web-light-italic {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 300;
-    font-style: italic;
-  }
-  
-  .titillium-web-regular-italic {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 400;
-    font-style: italic;
-  }
-  
-  .titillium-web-semibold-italic {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 600;
-    font-style: italic;
-  }
-  
-  .titillium-web-bold-italic {
-    font-family: "Titillium Web", sans-serif;
-    font-weight: 700;
-    font-style: italic;
-  }
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 200;
+	font-style: normal;
+}
+
+.titillium-web-light {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 300;
+	font-style: normal;
+}
+
+.titillium-web-regular {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+.titillium-web-semibold {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 600;
+	font-style: normal;
+}
+
+.titillium-web-bold {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 700;
+	font-style: normal;
+}
+
+.titillium-web-black {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 900;
+	font-style: normal;
+}
+
+.titillium-web-extralight-italic {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 200;
+	font-style: italic;
+}
+
+.titillium-web-light-italic {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 300;
+	font-style: italic;
+}
+
+.titillium-web-regular-italic {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 400;
+	font-style: italic;
+}
+
+.titillium-web-semibold-italic {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 600;
+	font-style: italic;
+}
+
+.titillium-web-bold-italic {
+	font-family: "Titillium Web", sans-serif;
+	font-weight: 700;
+	font-style: italic;
+}
 
 /* general */
-body,html{
-    font-family: "Titillium Web", sans-serif!important;
-    font-weight: 400!important;
-    font-style: normal!important;
+body,
+html {
+	font-family: "Titillium Web", sans-serif !important;
+	font-weight: 400 !important;
+	font-style: normal !important;
 }
-:root,html{
-    --padding-end: 0!important;
-    --ion-font-family: "Titillium Web", sans-serif!important;
+:root,
+html {
+	--padding-end: 0 !important;
+	--ion-font-family: "Titillium Web", sans-serif !important;
 }
 
-a{
-    text-decoration: none;
-    color: inherit
+a {
+	text-decoration: none;
+	color: inherit;
 }
-.card-1{
-    margin: -5px;
-    border: 1px solid #E0E0E0;  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)!important
+.card-1 {
+	margin-left: -1px;
+	margin-right: -1px;
+	border: 1px solid #e0e0e0;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 .not-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .text-small{
-    font-size: 14px;
-    line-height: 28px;
-  }
-.alert{
-    background-color: #D32F2F;
-    padding: 15px;
-    color: #fff;
-    border-radius: 5px;
-    font-size: 14px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
 }
-.alert ul{
-    padding-left: 20px;
-    margin: 0;
+.text-small {
+	font-size: 14px;
+	line-height: 28px;
 }
-ion-searchbar.ion-searchbar{
-    padding: 0!important;
-    --box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)!important;
-
+.alert {
+	background-color: #d32f2f;
+	padding: 15px;
+	color: #fff;
+	border-radius: 5px;
+	font-size: 14px;
+}
+.alert ul {
+	padding-left: 20px;
+	margin: 0;
+}
+ion-searchbar.ion-searchbar {
+	padding: 0 !important;
+	--box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+.text-center {
+	text-align: center;
 }
 
 /* account.vue */
-.mt-2{
-    margin-top: 2em;
+/**.mt-2{
+	margin-top: 2em;
+}
+.mt-1{
+  margin-top: 1em;
+}
+.mt-min{
+  margin-top: .5em;
 }
 
+.mb-2{
+  margin-bottom: 2em;
+}
+.mb-1{
+margin-bottom: 1em;
+}
+.mb-min{
+margin-bottom: .5em;
+}**/
+
 .myList ion-item::part(native) {
-    padding-left: 0!important;
-    padding-right: 0!important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }

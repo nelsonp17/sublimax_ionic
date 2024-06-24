@@ -1,3 +1,4 @@
+
 // Utilizando Intl.DateTimeFormat
 export const formatDateToHuman = (fechaString:string) => {
     //const fechaString = "2024-06-21T10:43:00.032539+00:00";
@@ -29,4 +30,50 @@ export function minLength(cadena: string, longitudMinima: number): boolean {
   
 export function listError(errores: string[]): string {
     return `<ul>${errores.map((error) => `<li>${error}</li>`).join('')}</ul>`;
+}
+
+export function generateUniqueProductID(prefix:string) {
+    //const prefix = "P"; // Prefijo para el identificador
+    const randomSuffix = Math.floor(Math.random() * 999) + 1; // Sufijo aleatorio entre 1 y 999
+    const paddedSuffix = randomSuffix.toString().padStart(3, "0"); // Relleno con ceros a la izquierda
+
+    return prefix + "-" + paddedSuffix; // Combina el prefijo y el sufijo con guion
+}
+
+export function saveToStorage<T>(key: string, data: string | number | boolean | T) {
+    try {
+        const tipo = typeof data 
+        if(tipo== 'number' || tipo == 'boolean' || tipo == 'string'){
+            localStorage.setItem(key, data);
+        }else if(tipo == 'object'){
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+        console.log(`Datos guardados en storage: ${key}`);
+    } catch (error) {
+        console.error(`Error al guardar datos en storage: ${error}`);
+    }
+}
+
+export function readFromStorage<T>(key: string): string | number | boolean | T | null {
+    const dataString = localStorage.getItem(key);
+    try {
+        if (dataString) {
+            return JSON.parse(dataString) as T;
+        } else {
+            console.log(`No se encontraron datos en storage para la clave: ${key}`);
+            return null;
+        }
+    } catch (error) {
+        try {
+            if (dataString) {
+                return dataString;
+            } else {
+                console.log(`No se encontraron datos en storage para la clave: ${key}`);
+                return null;
+            }
+        } catch (error) {
+            console.error(`Error al leer datos del storage: ${error}`);
+            return null;
+        }
+    }
 }

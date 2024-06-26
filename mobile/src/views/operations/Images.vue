@@ -3,7 +3,7 @@
 		<ion-header>
 			<ion-toolbar>
 				<ion-title>
-					<router-link to="/products">
+					<router-link to="/products" :replace="true">
 						<ion-icon
 							:icon="arrowBack"
 							style="margin-right: 10px"
@@ -151,7 +151,7 @@ import {
 } from "@ionic/vue";
 import { arrowBack, chevronForward, add, camera } from "ionicons/icons";
 import { supabase } from "@/utils/supabase";
-import { onUpdated, ref } from "vue";
+import {onMounted, onUpdated, ref} from "vue";
 import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -159,10 +159,10 @@ const route = useRoute()
 
 const images = ref([]);
 const loadImage = ref(false);
-let product_id = ref(0);
-let image_data = ref(0)
-let image_data_update_id = ref(null)
-let isUpdate = ref(false)
+// const product_id = ref(0);
+const image_data = ref(0)
+const image_data_update_id = ref(null)
+const isUpdate = ref(false)
 
 const openFileDialog = () => {
 	(document as any).getElementById("file-upload").click();
@@ -183,7 +183,7 @@ const onFileChange = (event: { target: { files: any[]; }; }) => {
 		title: file.name,
 		alt: file.name,
 		src: null,
-		product_id: product_id,
+		product_id: route.params.product_id,
 	};
 
 	reader.onload = async (e) => {
@@ -200,45 +200,39 @@ const onFileChange = (event: { target: { files: any[]; }; }) => {
 
 		loadImage.value=false
 		isUpdate.value = false;
-		
+		setTimeout(()=>getRows(), 500);
 		
 	};
 
 	reader.readAsDataURL(file);
+
+	// setTimeout(()=>getRows(), 500);
 };
 
 async function getRows() {
-	let { data: imgs, error } = await supabase
+	console.log("Llamada a la funcion getRow()")
+	const { data: imgs, error } = await supabase
 		.from("images")
 		.select(`id, created_at, src, title, alt, product_id, products (name)`)
-		.eq("product_id", product_id.value)
+		.eq("product_id", route.params.product_id)
 		.order("id");
 	
-	console.log( imgs )
-
-	if (imgs == undefined) {
-		return;
-	}
-	if (imgs?.length > 0) {
-		images.value = imgs;
-	}
+	setTimeout(()=>images.value = imgs, 500);
 }
 
-const init = () => {
-	console.log("producto_id parametro: ", route.params.product_id)
-	product_id.value = route.params.product_id
-	getRows();
-}
 
-console.log("ejecutar")
-init();
-
-
+onMounted(()=>{
+	setTimeout(()=>{
+		console.log("producto_id parametro: ", route.params.product_id)
+		getRows()
+	}, 500)
+})
 
 const handleRefresh = async (event: CustomEvent) => {
-	await getRows();
 	setTimeout(() => {
 		// Any calls to load data go here
+		images.value = []
+		getRows();
 		event.target.complete();
 	}, 2000);
 };
@@ -256,8 +250,6 @@ const addImage = async (image) => {
 	if(error){
 		console.log(error)
 	}else{
-		await getRows();
-		//image_data.value.id = img[0].id
 		return true;
 	}
 
@@ -275,7 +267,6 @@ const updateImage = async (image) => {
 	if(error){
 		console.log(error)
 	}else{
-		await getRows();
 		return true;
 	}
 
@@ -302,7 +293,6 @@ const canDismiss = async () => {
 };
 
 async function deleteRow(id: any){
-	console.log("imagen " + id)
 	if(id == undefined) { return }
 	const respuesta = await canDismiss()
 	

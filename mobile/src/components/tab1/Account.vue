@@ -110,20 +110,22 @@
 </template>
 
 <script setup lang="ts">
+
+
+import { IonRefresher, IonRefresherContent, IonCard, IonCardContent, IonIcon, IonItem, IonList, IonButton, IonNote, IonCardHeader, IonCardSubtitle, IonCardTitle, IonAvatar, IonLabel } from '@ionic/vue';
+import { personCircleOutline, call, chevronForward, exitOutline, listCircle } from 'ionicons/icons';
+import {ref, onMounted} from 'vue';
+import { supabase } from '@/utils/supabase'
+import { useRoute, useRouter} from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
 defineProps({
 	username: String,
 	email: String,
 	admin: Boolean,
 });
-
-import { IonRefresher, IonRefresherContent, IonCard, IonCardContent, IonIcon, IonItem, IonList, IonButton, IonNote, IonCardHeader, IonCardSubtitle, IonCardTitle, IonAvatar, IonLabel } from '@ionic/vue';
-import { personCircleOutline, call, chevronForward, exitOutline, listCircle } from 'ionicons/icons';
-import { ref, onMounted } from 'vue';
-import { supabase } from '../../utils/supabase'
-import { useRoute, useRouter } from 'vue-router'
-
-const router = useRouter()
-const route = useRoute()
 
 const VITE_VERSION_APP = import.meta.env.VITE_VERSION_APP;
 const VITE_MODE_DEVELOPER = import.meta.env.VITE_MODE_DEVELOPER;
@@ -138,10 +140,10 @@ const handleRefresh = async (event: CustomEvent) => {
 };
 // contidad de registros de las tablas
 const tablesCount = ref({
-	products: 10,
-	category: 15,
-	subcategory: 60,
-	environment: 6
+	products: 0,
+	category: 0,
+	subcategory: 0,
+	environment: 0
 });
 
 async function getCountRow() {
@@ -180,7 +182,11 @@ async function getCountRow() {
 
 }
 
+
+
+
 onMounted(() => {
+	console.log("onMounted")
 	getCountRow()
 });
 

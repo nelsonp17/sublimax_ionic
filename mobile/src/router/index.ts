@@ -1,5 +1,7 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import { createRouter } from '@ionic/vue-router';
+import { RouteRecordRaw, createWebHistory } from 'vue-router';
+// import { createRouter } from '@ionic/vue-router';
+// import { RouteRecordRaw } from 'vue-router';
 import TabsPage from '../views/TabsPage.vue'
 import Environment from '../views/operations/Environment.vue'
 
@@ -18,11 +20,13 @@ const routes: Array<RouteRecordRaw> = [
 			},
 			{
 				path: 'tab1',
-				component: () => import('@/views/Tab1Page.vue')
+				component: () => import('@/views/Tab1Page.vue'),
+				outlet: 'secondary'
 			},
 			{
 				path: 'tab2',
-				component: () => import('@/views/Tab2Page.vue')
+				component: () => import('@/views/Tab2Page.vue'),
+				outlet: 'secondary'
 			},
 			{
 				path: 'tab3',
@@ -49,6 +53,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/products/:product_id/images/',
 		component: () => import('@/views/operations/Images.vue'),
+		outlet: 'secondary'
 	}
 ]
 

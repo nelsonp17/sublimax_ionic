@@ -165,7 +165,7 @@
 
 	const manageImage = async () => {
 		modalController.dismiss(null, 'cancel')
-		router.push({ path: `/products/${props.id}/images` })
+		router.push({ path: `/products/${props.id}/images`, replace: true })
 	}
 
 	async function insert(){
@@ -271,7 +271,7 @@
 		}
 		
 		modalController.dismiss(form.value.name, 'confirm')
-		router.push({ path: `/products/${product_id.value}/images` })
+		router.push({ path: `/products/${product_id.value}/images`, replace: true})
 	};
 
 	const selectSubcategorys = ref()

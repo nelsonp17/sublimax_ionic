@@ -8,7 +8,7 @@ import Environment from '../views/operations/Environment.vue'
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
-		redirect: '/tabs/tab1'
+		redirect: '/tabs/tab2'
 	},
 	{
 		path: '/tabs/',
@@ -16,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: '',
-				redirect: '/tabs/tab1'
+				redirect: '/tabs/tab2'
 			},
 			{
 				path: 'tab1',
@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: 'tab2',
 				component: () => import('@/views/Tab2Page.vue'),
-				outlet: 'secondary'
+				// outlet: 'secondary'
 			},
 			{
 				path: 'tab3',
@@ -51,9 +51,28 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/operations/Product.vue'),
 	},
 	{
+		path: '/products/:product_id/',
+		component: () => import('@/views/pages/ProductDetails.vue'),
+		// outlet: 'secondary'
+	},
+	{
 		path: '/products/:product_id/images/',
 		component: () => import('@/views/operations/Images.vue'),
 		outlet: 'secondary'
+	},
+	{
+		path: '/products/:product_id/edit/',
+		component: () => import('@/views/operations/ProductEdit.vue'),
+		// outlet: 'secondary'
+	},
+	{
+		path: '/share_image/',
+		component: () => import('@/views/pages/ImageShareTemplateOne.vue'),
+		// outlet: 'secondary'
+	},
+	{
+		path: '/test/',
+		component: () => import('@/views/test/index.vue')
 	}
 ]
 

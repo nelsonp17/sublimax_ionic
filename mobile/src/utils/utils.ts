@@ -77,3 +77,20 @@ export function readFromStorage<T>(key: string): string | number | boolean | T |
         }
     }
 }
+
+export const buscarCoincidencias = (nombreBuscado: string) => {
+    return categorys.value.filter((category) =>
+        category.name.toLowerCase().includes(nombreBuscado.toLowerCase())
+    );
+};
+
+export const changeTagHTML = (elemRef: any, nameTag: string, id: string) => {
+    // Cambia la etiqueta
+    const htmlElement = document.createElement(nameTag);
+    htmlElement.setAttribute("id", id)
+    htmlElement.innerHTML = elemRef.innerHTML;
+    elemRef.parentNode.replaceChild(htmlElement, elemRef);
+}
+export const removeSpaceString = (str: string)=>{
+    return str.replace(/ /g, "")
+}

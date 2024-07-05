@@ -36,7 +36,7 @@
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
-			
+
 			<input
 				accept="image/*"
 				interface="popover"
@@ -50,15 +50,15 @@
 			<div class="max-w-sm mx-auto mt-4 mb-2" v-if="images.length > 0">
 				<div class="bg-white shadow-lg rounded-lg overflow-hidden">
 					<p class="px-4 py-2 font-medium text-gray-700">
-						Producto: {{  images[0].products.name  }}
+						Producto: {{ images[0].products.name }}
 					</p>
 					<ul class="divide-y divide-gray-200">
 						<li v-for="image in images" :key="image.id">
 							<div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="toggleItem(image)">
 								<div class="flex justify-between items-center">
 									<span class="font-medium text-gray-700">{{
-										image.alt
-									}}</span>
+											image.alt
+										}}</span>
 									<svg
 										v-if="!image.isOpen"
 										xmlns="http://www.w3.org/2000/svg"
@@ -102,15 +102,19 @@
 								</div>
 								<div class="flex justify-between items-center">
 									<span class="text-sm text-gray-500"
-										>Opciones</span
+									>Opciones</span
 									>
 									<span
 										class="inline-flex -space-x-px overflow-hidden rounded-md border bg-white shadow-sm"
 									>
-										<button class="inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative" @click="openFileDialogUpdate(image.id)">
+										<button
+											class="inline-block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
+											@click="openFileDialogUpdate(image.id)">
 											Actualizar
 										</button>
-										<button class="inline-block px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-100 focus:relative" @click="deleteRow(image.id)">
+										<button
+											class="inline-block px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-100 focus:relative"
+											@click="deleteRow(image.id)">
 											Eliminar
 										</button>
 									</span>
@@ -145,15 +149,15 @@ import {
 	IonToolbar,
 	IonTitle,
 	IonContent,
-	IonButton,
 	IonIcon,
 	actionSheetController
 } from "@ionic/vue";
-import { arrowBack, chevronForward, add, camera } from "ionicons/icons";
-import { supabase } from "@/utils/supabase";
-import {onMounted, onUpdated, ref} from "vue";
-import { useRoute, useRouter } from 'vue-router'
+import {arrowBack, camera} from "ionicons/icons";
+import {supabase} from "@/utils/supabase";
+import {onMounted, ref} from "vue";
+import {useRoute, useRouter} from 'vue-router'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const router = useRouter()
 const route = useRoute()
 
@@ -169,7 +173,9 @@ const openFileDialog = () => {
 };
 const openFileDialogUpdate = (image_id: any) => {
 	console.log("imagen " + image_id)
-	if(image_id == undefined) { return }
+	if (image_id == undefined) {
+		return
+	}
 	isUpdate.value = true;
 	image_data_update_id.value = image_id;
 	(document as any).getElementById("file-upload").click();
@@ -189,19 +195,18 @@ const onFileChange = (event: { target: { files: any[]; }; }) => {
 	reader.onload = async (e) => {
 		image_data.value.src = e.target.result;
 
-		let op = false
 		// actualizo la imagen
-		if(isUpdate.value){
+		if (isUpdate.value) {
 			image_data.value.id = image_data_update_id.value
-			op = await updateImage(image_data.value)
-		}else{
-			op = await addImage(image_data.value);
+			await updateImage(image_data.value)
+		} else {
+			await addImage(image_data.value);
 		}
 
-		loadImage.value=false
+		loadImage.value = false
 		isUpdate.value = false;
-		setTimeout(()=>getRows(), 500);
-		
+		setTimeout(() => getRows(), 500);
+
 	};
 
 	reader.readAsDataURL(file);
@@ -211,18 +216,18 @@ const onFileChange = (event: { target: { files: any[]; }; }) => {
 
 async function getRows() {
 	console.log("Llamada a la funcion getRow()")
-	const { data: imgs, error } = await supabase
+	const {data: imgs } = await supabase
 		.from("images")
 		.select(`id, created_at, src, title, alt, product_id, products (name)`)
 		.eq("product_id", route.params.product_id)
 		.order("id");
-	
-	setTimeout(()=>images.value = imgs, 500);
+
+	setTimeout(() => images.value = imgs, 500);
 }
 
 
-onMounted(()=>{
-	setTimeout(()=>{
+onMounted(() => {
+	setTimeout(() => {
 		console.log("producto_id parametro: ", route.params.product_id)
 		getRows()
 	}, 500)
@@ -242,14 +247,14 @@ const toggleItem = (image: { isOpen: boolean; }) => {
 };
 
 const addImage = async (image) => {
-	const { data: img, error } = await supabase
-	.from('images')
-	.insert(image)
-	.select()
+	const {error} = await supabase
+		.from('images')
+		.insert(image)
+		.select()
 
-	if(error){
+	if (error) {
 		console.log(error)
-	}else{
+	} else {
 		return true;
 	}
 
@@ -257,16 +262,16 @@ const addImage = async (image) => {
 };
 
 const updateImage = async (image) => {
-	const { data, error } = await supabase
-	.from('images')
-	.update(image)
-	.eq('id', image.id)
-	.select()
+	const {error} = await supabase
+		.from('images')
+		.update(image)
+		.eq('id', image.id)
+		.select()
 
 
-	if(error){
+	if (error) {
 		console.log(error)
-	}else{
+	} else {
 		return true;
 	}
 
@@ -288,18 +293,20 @@ const canDismiss = async () => {
 		],
 	});
 	actionSheet.present();
-	const { role } = await actionSheet.onWillDismiss();
+	const {role} = await actionSheet.onWillDismiss();
 	return role === 'confirm';
 };
 
-async function deleteRow(id: any){
-	if(id == undefined) { return }
+async function deleteRow(id: any) {
+	if (id == undefined) {
+		return
+	}
 	const respuesta = await canDismiss()
-	
-	if(respuesta){
-		const { error } = await supabase.from('images').delete().eq('id', id)
 
-		if(error){
+	if (respuesta) {
+		const {error} = await supabase.from('images').delete().eq('id', id)
+
+		if (error) {
 			console.log(error)
 			return
 		}

@@ -1,31 +1,30 @@
 <template>
 	<ion-page>
-		<ion-header class="shadow-none">
-			<ion-toolbar class="bg-gray-50 mytoolbar">
-				<ion-title>
-					<div class=" flex items-center justify-between my-2" style="font-size: 12px!important">
-						<div class="flex bg-white w-full rounded border-blue-200-100 border">
-							<button type="submit" class="my-1 px-1 text-gray-400" >
-								<!--							<ion-icon aria-hidden="true" :icon="search" v-model="input_search" style="font-size: 16px!important; margin-top: -2px"/>-->
-								<svg class="fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 56.966 56.966" style="padding: 1px; height: 17px; enable-background:new 0 0 56.966 56.966;" xml:space="preserve">
-									<path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-								</svg>
-							</button>
-							<input class="w-full bg-transparent py-2 text-gray-400 outline-none focus:outline-none " type="search" name="search" placeholder="Buscar producto..." />
-						</div>
-					</div>
-				</ion-title>
-			</ion-toolbar>
-		</ion-header>
+		<Searchbar />
 		<ion-content :fullscreen="true" class="titillium-web-regular">
-			<div class="mt-5 mb-2 mx-4">Catálogo</div>
-			<div class="">
-				<!-- component -->
+			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+				<ion-refresher-content></ion-refresher-content>
+			</ion-refresher>
+<!--			<div class="mt-5 mb-2 mx-4">Catálogo</div>-->
+			<div class="box-content shadow-2xl grid grid-cols-2 py-2 px-4 text-gray-400">
+				<div class="grid-1/2"><small>+{{ counts.products }} resultados</small></div>
+				<div class="grid-1/2 text-right">
 
-
+					<p class="btn-filter text-gray-400 p-0" id="click-trigger">
+						<small>Filtar</small>
+						<ion-icon aria-hidden="true" class="icon-top-position ml-1" :icon="caretDown"></ion-icon>
+					</p>
+					<ion-popover :keep-contents-mounted="true" trigger="click-trigger" trigger-action="click">
+						<div class="py-1 px-2 text-small">
+							Hello World!
+						</div>
+					</ion-popover>
+				</div>
+			</div>
+			<div class="my-5">
 				<!-- component -->
 				<section class="grid grid-cols-2">
-					<article class="border border-gray-300" v-for="product in products" :key="product.id">
+					<router-link class="border border-gray-300" v-for="product in products" :key="product.id" :to="`/products/${product.id}`" @click="()=> { saveToStorage('product', product) }">
 						<div class="w-full h-48">
 							<img :src="product.images[0].src" :alt="product.alt" class="rounded-none h-full mb-2">
 						</div>
@@ -33,54 +32,174 @@
 							<p class="text-xl">${{ product.price }}</p>
 							<p class="text-small">{{ product.name }}</p>
 						</div>
-					</article>
+					</router-link>
 				</section>
 			</div>
 
 
+<!--			<img :src="codeQR">-->
 
+			<ol class="mt-8 flex justify-center gap-1 text-xs font-medium" v-if="pagination.totalPages > 1">
+				<li>
+					<a
+						href="#"
+						class="inline-flex size-8 items-center justify-center"
+						@click.prevent="handlePageChange(pagination.currentPage - 1)"
+						:disabled="pagination.currentPage == 1"
+					>
+						<span class="sr-only">Prev Page</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-3 w-3"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+								clip-rule="evenodd"
+							/>
+						</svg>
+					</a>
+				</li>
+
+				<li class="mb-5" v-for="page in pageNumbers" :key="page">
+					<a href="#"
+					   @click.prevent="handlePageChange(page)"
+					   class="block size-8 rounded border-black text-center leading-8 "
+					   :class="{'bg-primary-theme': pagination.currentPage == page}">{{ page }}</a>
+				</li>
+
+				<li>
+					<a
+						href="#"
+						class="inline-flex size-8 items-center justify-center"
+						@click.prevent="handlePageChange(pagination.currentPage + 1)"
+						:disabled="pagination.currentPage == pagination.totalPages"
+					>
+						<span class="sr-only">Next Page</span>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-3 w-3"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+								clip-rule="evenodd"
+							/>
+						</svg>
+					</a>
+				</li>
+			</ol>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script setup lang="ts">
-import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon} from '@ionic/vue';
-import {onMounted, ref} from "vue";
+import {IonContent, IonIcon, IonPage, IonPopover, IonRefresher, IonRefresherContent} from '@ionic/vue';
+import {computed, onMounted, reactive, ref} from "vue";
 import {supabase} from "@/utils/supabase";
-import {search} from "ionicons/icons";
+import {caretDown} from "ionicons/icons";
 
-const products = ref([]);
-const input_search = ref('');
+import Searchbar from "@/components/tab2/Searchbar.vue";
+import {saveToStorage} from "@/utils/utils";
+
+let products = ref([]);
+const codeQR = ref('');
+const pagination = reactive({
+	pageSize: 30,
+	currentPage: 1,
+	totalItems: 0,
+	totalPages: 1,
+	data: [],
+})
+const usePagination = (state, fetchData) => {
+
+	const pageNumbers = computed(() => {
+		const start = Math.max(1, state.currentPage - 2);
+		const end = Math.min(state.totalPages, state.currentPage + 2);
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	});
+
+	const handlePageChange = (page:number) => {
+		if (page < 1 || page > state.totalPages) return;
+		state.currentPage = page;
+		fetchData();
+	};
+
+	return {
+		pageNumbers,
+		handlePageChange,
+	};
+};
+
+
+
+const counts = ref({
+	products: 0
+})
+
 
 const preCode = () => {
-	const toolbarElement = document.querySelector('ion-toolbar');
-	const t = toolbarElement.shadowRoot;
+	try{
+		// document.querySelector('ion-toolbar.mytoolbar').shadowRoot.querySelector("div").style.background = "initial!important";
 
-	// console.log(t)
-	if (t) {
-		toolbarElement.shadowRoot.querySelector("div").style.background = "initial!important";
+		const iconInner = document.querySelector('ion-icon.icon-top-position').shadowRoot.querySelector(".icon-inner")
+		iconInner.style.position = "absolute";
+		iconInner.style.top = "4px";
+
+		console.log("codigo qr")
+		generateQR();
+	}catch (e){
+		console.log("no cargado los style: ", e)
 	}
 }
-// Suponiendo que tienes una referencia al elemento de la barra de herramientas
-onMounted(()=>{
-	setTimeout(()=> preCode(), 0)
-})
-
-const getProduct = async () => {
-	let { data: p, error } = await supabase
-		.from('products')
-		.select('id, name, description, price, uuid, tags, images (alt, src, title, product_id), subcategorys (name, category_id)')
-
-	console.log(p, error)
-	if(error){
-		console.log(error)
+async function getCountRow() {
+	// env
+	let { data: products, error: errorEnv } = await supabase.from('products').select('*', { count: 'exact' });
+	if (errorEnv) {
+		console.error('Error al obtener el número de registros:', errorEnv.message);
 		return;
 	}
-	products.value = p
+	counts.value.products = <number>products?.length;
 }
 
-onMounted(()=>{
-	getProduct();
-})
+const fetchData = async () => {
+	const offset = (pagination.currentPage - 1) * pagination.pageSize
+	const limit = (offset + pagination.pageSize) - 1
 
+	console.log("range", offset, limit)
+	const { data, error } = await supabase
+		.from('products')
+		.select('id, name, description, price, uuid, tags, images (alt, src, title, product_id), subcategorys (name, category_id)')
+		.order('created_at', { ascending: false })
+		.range(offset, limit)
+
+	if (error) console.error('Error fetching data:', error);
+	else{
+		products.value = data
+		pagination.totalItems = data.length;
+
+		const getRoundedIntegerPart = (number:number) => Math.ceil(number);
+		pagination.totalPages = getRoundedIntegerPart(counts.value.products / pagination.pageSize)
+	}
+}
+const { pageNumbers, handlePageChange } = usePagination(pagination, fetchData);
+
+
+onMounted(async ()=>{
+	setTimeout(()=> preCode(), 500)
+	await getCountRow();
+	await fetchData();
+})
+async function handleRefresh(event: CustomEvent) {
+	setTimeout(async () => {
+		await getCountRow();
+		await fetchData();
+		// Any calls to load data go here
+		event.target.complete();
+	}, 2000);
+}
 </script>

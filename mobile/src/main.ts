@@ -6,6 +6,7 @@ import { IonicVue } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
+import QRious from "qrious";
 
 /* Basic CSS for apps built with Ionic */
 import '@ionic/vue/css/normalize.css';
@@ -29,7 +30,10 @@ import '@ionic/vue/css/display.css';
 
 /* @import '@ionic/vue/css/palettes/dark.always.css'; */
 /* @import '@ionic/vue/css/palettes/dark.class.css'; */
-import '@ionic/vue/css/palettes/dark.system.css';
+
+// import '@ionic/vue/css/palettes/dark.always.css';
+import '@ionic/vue/css/palettes/dark.class.css';
+// import '@ionic/vue/css/palettes/dark.system.css';
 
 /* Theme variables */
 
@@ -41,7 +45,9 @@ import 'tailwindcss/utilities.css'
 import './theme/variables.css';
 import './theme/styles.css';
 
+import modeDark from '@/utils/modeDark'
 
+new modeDark().useDark()
 
 
 const app = createApp(App)

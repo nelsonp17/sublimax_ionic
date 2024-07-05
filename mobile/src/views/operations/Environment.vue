@@ -28,16 +28,16 @@
 			</ion-refresher>
 
 			<div>
-				<p style="color: #212121"> <b>Configuración de la app Global</b> </p>
+				<p> <b>Configuración de la app Global</b> </p>
 				<ion-card class="card-1">
 					<ion-card-content>
 						<ion-label>
-							<p style="color: #212121"> <b>Variables de entorno</b> </p>
+							<p> <b>Variables de entorno</b> </p>
 						</ion-label>
 						<div style="clear: both; height: 40px;">
 							<div style="float:left;">
 								<ion-label>
-									<p style="line-height: 40px; color: #212121">Agregar una variable</p>
+									<p style="line-height: 40px">Agregar una variable</p>
 								</ion-label>
 							</div>
 							<div style="float:right">
@@ -48,8 +48,8 @@
 				</ion-card>
 			</div>
 
-			<div class="mt-2">
-				<p style="color: #212121"> <b>Todos los registros</b> </p>
+			<div class="mt-5">
+				<p> <b>Todos los registros</b> </p>
 				<ion-searchbar class="ion-searchbar" placeholder="Buscar" @ionInput="buscar"></ion-searchbar>
 				<ion-card class="card-1" v-for="row in rows" :key="row.id" style="margin-top: 15px" @click=edit(row)>
 					<ion-card-content style="margin:0;padding:0;">
@@ -83,21 +83,37 @@
 </template>
 
 <script setup lang="ts">
-import { IonSearchbar, IonRefresher, IonRefresherContent, modalController, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton, IonCardContent, IonIcon, IonList, IonItem, IonNote, IonLabel } from '@ionic/vue';
-import { arrowBack, chevronForward } from 'ionicons/icons';
+import {
+	IonButton,
+	IonCard,
+	IonCardContent,
+	IonContent,
+	IonHeader,
+	IonIcon,
+	IonItem,
+	IonLabel,
+	IonList,
+	IonNote,
+	IonPage,
+	IonRefresher,
+	IonRefresherContent,
+	IonSearchbar,
+	IonTitle,
+	IonToolbar,
+	modalController
+} from '@ionic/vue';
+import {arrowBack, chevronForward} from 'ionicons/icons';
 import EnvModal from '../../components/tab1/EnvModal.vue';
-import { supabase } from '@/utils/supabase';
-import { formatDateToHuman } from '@/utils/utils';
-import { onMounted, ref } from 'vue';
+import {supabase} from '@/utils/supabase';
+import {buscarCoincidencias, formatDateToHuman} from '@/utils/utils';
+import {onMounted, ref} from 'vue';
 
 const buscar = (event: { target: { value: any; }; }) => {
 	const textoBusqueda = event.target.value;
 	if (textoBusqueda == '') {
 		rows.value = envs.value
 	} else {
-		const coincidencias = buscarCoincidencias(textoBusqueda)
-
-		rows.value = coincidencias;
+		rows.value = buscarCoincidencias(textoBusqueda);
 
 	}
 	console.log('Texto de búsqueda:', textoBusqueda);
@@ -114,7 +130,7 @@ const abrirModal = async () => {
 
 	if (role === 'confirm') {
 		console.log(`Hello, ${data}!`);
-		getRows()
+		await getRows()
 	}
 };
 
@@ -131,26 +147,9 @@ const edit = async (row) => {
 
 	if (role === 'confirm') {
 		console.log(`Hello, ${data}!`);
-		getRows()
+		await getRows()
 	}
 };
-
-const search = async (name: string) => {
-	for (const env of envs.value) {
-		// Accede a las propiedades del objeto 'env'
-		//console.log(env.id, env.name, env.description);
-		if (name == env.name) {
-			return env;
-		}
-	}
-}
-const buscarCoincidencias = (nombreBuscado: string) => {
-	const coincidencias = envs.value.filter((env) =>
-		env.name.toLowerCase().includes(nombreBuscado.toLowerCase())
-	);
-	return coincidencias;
-};
-
 
 const handleRefresh = async (event: CustomEvent) => {
 	await getRows()
@@ -166,7 +165,7 @@ const envs = ref([]);
 const rows = ref([]);
 
 async function getRows() {
-	let { data: environment, error } = await supabase.from('environment').select('*').order('name')
+	const { data: environment } = await supabase.from('environment').select('*').order('name')
 
 	if (environment?.length > 0) {
 		envs.value = environment

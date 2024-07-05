@@ -28,16 +28,16 @@
 			</ion-refresher>
 
 			<div>
-				<p style="color: #212121"> <b>Categorías de productos</b> </p>
+				<p><b>Categorías de productos</b></p>
 				<ion-card class="card-1">
 					<ion-card-content>
 						<ion-label>
-							<p style="color: #212121"> <b>Categorías</b> </p>
+							<p><b>Categorías</b></p>
 						</ion-label>
 						<div style="clear: both; height: 40px;">
 							<div style="float:left;">
 								<ion-label>
-									<p style="line-height: 40px; color: #212121">Agregar una categorías</p>
+									<p style="line-height: 40px;">Agregar una categorías</p>
 								</ion-label>
 							</div>
 							<div style="float:right">
@@ -48,8 +48,8 @@
 				</ion-card>
 			</div>
 
-			<div class="mt-2">
-				<p style="color: #212121"> <b>Todos los registros</b> </p>
+			<div class="mt-5">
+				<p><b>Todos los registros</b></p>
 				<ion-searchbar class="ion-searchbar" placeholder="Buscar" @ionInput="buscar"></ion-searchbar>
 				<ion-card class="card-1" v-for="row in rows" :key="row.id" style="margin-top: 15px" @click=edit(row)>
 					<ion-card-content style="margin:0;padding:0;">
@@ -75,27 +75,42 @@
 				</ion-card>
 
 			</div>
-			<br /><br />
+			<br/><br/>
 		</ion-content>
 	</ion-page>
 </template>
-
 <script setup lang="ts">
-import { IonSearchbar, IonRefresher, IonRefresherContent, modalController, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton, IonCardContent, IonIcon, IonList, IonItem, IonNote, IonLabel } from '@ionic/vue';
-import { arrowBack, chevronForward } from 'ionicons/icons';
+import {
+	IonButton,
+	IonCard,
+	IonCardContent,
+	IonContent,
+	IonHeader,
+	IonIcon,
+	IonItem,
+	IonLabel,
+	IonList,
+	IonNote,
+	IonPage,
+	IonRefresher,
+	IonRefresherContent,
+	IonSearchbar,
+	IonTitle,
+	IonToolbar,
+	modalController
+} from '@ionic/vue';
+import {arrowBack, chevronForward} from 'ionicons/icons';
 import CategoryModal from '../../components/tab1/CategoryModal.vue';
-import { supabase } from '@/utils/supabase';
-import { formatDateToHuman } from '@/utils/utils';
-import { onMounted, ref } from 'vue';
+import {supabase} from '@/utils/supabase';
+import {buscarCoincidencias, formatDateToHuman} from '@/utils/utils';
+import {onMounted, ref} from 'vue';
 
 const buscar = (event: { target: { value: any; }; }) => {
 	const textoBusqueda = event.target.value;
 	if (textoBusqueda == '') {
 		rows.value = categorys.value
 	} else {
-		const coincidencias = buscarCoincidencias(textoBusqueda)
-
-		rows.value = coincidencias;
+		rows.value = buscarCoincidencias(textoBusqueda);
 
 	}
 	console.log('Texto de búsqueda:', textoBusqueda);
@@ -108,7 +123,7 @@ const abrirModal = async () => {
 	});
 	await modal.present();
 
-	const { data, role } = await modal.onWillDismiss();
+	const {role} = await modal.onWillDismiss();
 
 	if (role === 'confirm') {
 		getRows()
@@ -118,28 +133,14 @@ const abrirModal = async () => {
 const edit = async (row) => {
 	const modal = await modalController.create({
 		component: CategoryModal, // El componente modal que generaste
-		componentProps: { id: row.id, name: row.name }, // Pasa los datos al modal
+		componentProps: {id: row.id, name: row.name}, // Pasa los datos al modal
 	});
 	await modal.present();
 
-	const { data, role } = await modal.onWillDismiss();
+	const {role} = await modal.onWillDismiss();
 	if (role === 'confirm') {
 		getRows()
 	}
-};
-
-const search = async (name: string) => {
-	for (const category of categorys.value) {
-		if (name == category.name) {
-			return category;
-		}
-	}
-}
-const buscarCoincidencias = (nombreBuscado: string) => {
-	const coincidencias = categorys.value.filter((category) =>
-		category.name.toLowerCase().includes(nombreBuscado.toLowerCase())
-	);
-	return coincidencias;
 };
 
 
@@ -157,21 +158,21 @@ const categorys = ref([]);
 const rows = ref([]);
 
 async function getRows() {
-	let { data: categorys, error } = await supabase.from('categorys').select('*').order('name')
+	const {data: category} = await supabase.from('categorys').select('*').order('name')
 
-	if (categorys?.length > 0) {
-		categorys.value = categorys
+	if (category?.length > 0) {
+		category.value = category
 	}
 
-	rows.value = categorys.value
+	rows.value = category.value
 }
+
 onMounted(async () => {
 	await getRows()
 })
 
 
 </script>
-
 <style scoped>
 .metadata-end-wrapper {
 	position: absolute;

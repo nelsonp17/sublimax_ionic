@@ -3,10 +3,10 @@
 	<ion-header>
 		<ion-toolbar>
 			<ion-buttons slot="start">
-				<ion-button @click="cancel()">Cancelar</ion-button>
+				<ion-button @click="cancel()" class="button-modal-theme">Cancelar</ion-button>
 			</ion-buttons>
 			<ion-buttons slot="end">
-				<ion-button :strong="true" @click="confirm()">Guardar</ion-button>
+				<ion-button :strong="true" @click="confirm()" class="button-modal-theme">Guardar</ion-button>
 			</ion-buttons>
 		</ion-toolbar>
 	</ion-header>
@@ -16,7 +16,7 @@
 				<div>Corrige los siguiente errores:<br/></div>
 				<div v-html="errorsForm"></div>
 			</div>
-			<p style="color: #212121"> 
+			<p>
 				<b v-if="isInsert">Agregar una categoría</b> 
 				<b v-else>Actualizar una categoría</b> 
 			</p>

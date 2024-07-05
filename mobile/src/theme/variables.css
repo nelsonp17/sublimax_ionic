@@ -1,2 +1,180 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+
+
+/* Tema oscuro */
+:root {
+    --ion-color-primary: #0077B6; /* Blanco grisáceo */
+
+    --ion-color-secondary: #ADE8F4; /* Blanco perla */
+
+    --ion-color-tertiary: #C2E0FA; /* Azul claro */
+
+    --ion-color-text: #000; /* Azul celeste brillante */
+
+    --ion-background-color: #F9FAFB; /* Blanco casi puro */
+
+    --ion-color-text-primary: #fff;
+
+    --ion-color-text-secondary: #212121;
+
+    --ion-item-background: transparent;
+
+    /*--ion-tab-bar-color: #000;*/
+
+    --ion-button-modal-theme: #000;
+
+}
+
+/* Tema oscuro */
+.ion-palette-dark.ios,
+.ion-palette-dark.md{
+    --ion-color-primary: #0077B6; /* Azul marino oscuro */
+
+    --ion-color-secondary: #023E8A; /* Azul marino */
+
+    --ion-color-tertiary: #0077B6; /* Azul celeste oscuro */
+
+    --ion-color-text: #fff; /* Blanco perla */
+
+    --ion-color-text-primary: #fff;
+
+    --ion-color-text-secondary: #CAF0F8;
+
+    --ion-background-color: #212121; /* Blanco casi puro */
+
+    --ion-item-background: transparent;
+
+    --ion-tab-bar-color: #fff;
+
+    --ion-button-modal-theme: #fff;
+
+}
+/*Tema oscuro:*/
+
+/*Color primario: #03045E (azul marino oscuro)*/
+/*Color secundario: #023E8A (azul marino)*/
+/*Color de acento: #0077B6 (azul celeste oscuro)*/
+/*Color de texto: #ADE8F4 (blanco perla)*/
+/*Color de fondo: #212121 (negro grisáceo)*/
+
+/*Tema claro:*/
+
+/*Color primario: #CAF0F8 (blanco grisáceo)*/
+/*Color secundario: #ADE8F4 (blanco perla)*/
+/*Color de acento: #00B4D8 (azul claro)*/
+/*Color de texto: #48CAE4 (azul celeste brillante)*/
+/*Color de fondo: #F9FAFB (blanco casi puro)*/
+
+
+/*Paleta extendida:*/
+/*Tema oscuro:*/
+/*#191A7A (azul marino muy oscuro)*/
+/*#3B42A1 (azul marino oscuro)*/
+/*#5865C3 (azul celeste oscuro)*/
+/*#D1E2F7 (blanco perla claro)*/
+/*#333333 (negro)*/
+/*Tema claro:*/
+/*#E9ECF4 (blanco grisáceo claro)*/
+/*#D1E2F7 (blanco perla claro)*/
+/*#C2E0FA (azul claro más claro)*/
+/*#89DFF9 (azul celeste brillante más claro)*/
+/*#F4F5F7 (blanco casi puro más claro)*/
+
+/*:root {*/
+/*    --ion-color-primary: #0077B6; !* Blanco grisáceo *!*/
+/*    --ion-color-primary-rgb: 202, 240, 248;*/
+/*    --ion-color-primary-shade: #E9ECF4; !* Blanco grisáceo claro *!*/
+/*    --ion-color-primary-tint: #F2F5FA; !* Blanco grisáceo muy claro *!*/
+
+/*    --ion-color-secondary: #ADE8F4; !* Blanco perla *!*/
+/*    --ion-color-secondary-rgb: 173, 232, 244;*/
+/*    --ion-color-secondary-shade: #D1E2F7; !* Blanco perla claro *!*/
+/*    --ion-color-secondary-tint: #F2F5FA; !* Blanco perla muy claro *!*/
+
+/*    --ion-color-tertiary: #C2E0FA; !* Azul claro *!*/
+/*    --ion-color-tertiary-rgb: 194, 224, 250;*/
+/*    --ion-color-tertiary-shade: #B2D4F7; !* Azul claro oscuro *!*/
+/*    --ion-color-tertiary-tint: #D3E9FF; !* Azul claro claro *!*/
+
+/*    --ion-color-text: #48CAE4; !* Azul celeste brillante *!*/
+/*    --ion-color-text-rgb: 72, 206, 228;*/
+/*    --ion-color-text-shade: #89DFF9; !* Azul celeste brillante claro *!*/
+/*    --ion-color-text-tint: #9CF2FF; !* Azul celeste brillante muy claro *!*/
+
+/*    --ion-background-color: #F9FAFB; !* Blanco casi puro *!*/
+/*    --ion-background-color-rgb: 249, 250, 251;*/
+/*    --ion-background-color-shade: #F4F5F7; !* Blanco casi puro oscuro *!*/
+/*    --ion-background-color-tint: #FCFDFD; !* Blanco casi puro claro *!*/
+
+/*    --ion-item-selected-background: #CAF0F8; !* Blanco grisáceo *!*/
+/*    --ion-item-selected-background-rgb: 202, 240, 248;*/
+
+/*    --ion-toolbar-background: #CAF0F8; !* Blanco grisáceo *!*/
+/*    --ion-toolbar-text-color: #48CAE4; !* Azul celeste brillante *!*/
+
+/*    --ion-button-background: #CAF0F8; !* Blanco grisáceo *!*/
+/*    --ion-button-text-color: #48CAE4; !* Azul celeste brillante *!*/
+
+/*    --ion-segment-button-background: #CAF0F8; !* Blanco grisáceo *!*/
+/*    --ion-segment-button-text-color: #48CAE4; !* Azul celeste brillante *!*/
+
+/*    --ion-card-background: #F9FAFB; !* Blanco casi puro *!*/
+/*    --ion-card-text-color: #48CAE4; !* Azul celeste brillante *!*/
+
+/*    --ion-list-background: #F9FAFB; !* Blanco casi puro *!*/
+/*    --ion-list-text-color: #48CAE4; !* Azul celeste brillante *!*/
+
+/*    --ion-footer-background: #F9FAFB; !* Blanco casi puro *!*/
+/*    --ion-footer-text-color: #48CAE4; !* Azul celeste brillante *!*/
+/*}*/
+
+/*!* Tema claro *!*/
+/*.ion-palette-dark.ios,*/
+/*.ion-palette-dark.md{*/
+/*    --ion-color-primary: #03045E; !* Azul marino oscuro *!*/
+/*    --ion-color-primary-rgb: 3, 4, 94;*/
+/*    --ion-color-primary-shade: #191A7A; !* Azul marino muy oscuro *!*/
+/*    --ion-color-primary-tint: #3B42A1; !* Azul marino oscuro *!*/
+
+/*    --ion-color-secondary: #023E8A; !* Azul marino *!*/
+/*    --ion-color-secondary-rgb: 2, 62, 138;*/
+/*    --ion-color-secondary-shade: #152B53; !* Azul marino oscuro *!*/
+/*    --ion-color-secondary-tint: #2952A6; !* Azul marino *!*/
+
+/*    --ion-color-tertiary: #0077B6; !* Azul celeste oscuro *!*/
+/*    --ion-color-tertiary-rgb: 0, 119, 182;*/
+/*    --ion-color-tertiary-shade: #005F8A; !* Azul celeste oscuro *!*/
+/*    --ion-color-tertiary-tint: #42A5D9; !* Azul celeste *!*/
+
+/*    --ion-color-text: #ADE8F4; !* Blanco perla *!*/
+/*    --ion-color-text-rgb: 173, 232, 244;*/
+/*    --ion-color-text-shade: #D1E2F7; !* Blanco perla claro *!*/
+/*    --ion-color-text-tint: #F2F5FA; !* Blanco perla muy claro *!*/
+
+/*    --ion-background-color: #212121; !* Negro grisáceo *!*/
+/*    --ion-background-color-rgb: 33, 33, 33;*/
+/*    --ion-background-color-shade: #000000; !* Negro *!*/
+/*    --ion-background-color-tint: #424242; !* Negro grisáceo claro *!*/
+
+/*    --ion-item-selected-background: #03045E; !* Azul marino oscuro *!*/
+/*    --ion-item-selected-background-rgb: 3, 4, 94;*/
+
+/*    --ion-toolbar-background: #03045E; !* Azul marino oscuro *!*/
+/*    --ion-toolbar-text-color: #ADE8F4; !* Blanco perla *!*/
+
+/*    --ion-button-background: #03045E; !* Azul marino oscuro *!*/
+/*    --ion-button-text-color: #ADE8F4; !* Blanco perla *!*/
+
+/*    --ion-segment-button-background: #03045E; !* Azul marino oscuro *!*/
+/*    --ion-segment-button-text-color: #ADE8F4; !* Blanco perla *!*/
+
+/*    --ion-card-background: #212121; !* Negro grisáceo *!*/
+/*    --ion-card-text-color: #ADE8F4; !* Blanco perla *!*/
+
+/*    --ion-list-background: #212121; !* Negro grisáceo *!*/
+/*    --ion-list-text-color: #ADE8F4; !* Blanco perla *!*/
+
+/*    --ion-footer-background: #212121; !* Negro grisáceo *!*/
+/*    --ion-footer-text-color: #ADE8F4; !* Blanco perla *!*/
+/*}*/

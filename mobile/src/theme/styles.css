@@ -65,6 +65,9 @@
 	font-style: italic;
 }
 
+.d-none{
+	display: none;
+}
 /* general */
 body,
 html {
@@ -149,21 +152,6 @@ ion-searchbar.ion-searchbar {
 .counter-input{
     display: inline-flex;
 }
-.counter-input button, .counter-input input{
-}
-/*input[type='number']::-webkit-inner-spin-button,*/
-/*input[type='number']::-webkit-outer-spin-button {*/
-/*    -webkit-appearance: none;*/
-/*    margin: 0;*/
-/*}*/
-
-/*.custom-number-input input:focus {*/
-/*    outline: none !important;*/
-/*}*/
-
-/*.custom-number-input button:focus {*/
-/*    outline: none !important;*/
-/*}*/
 .modal {
 	/*overflow: hidden;*/
 	display: none;
@@ -245,7 +233,7 @@ ion-button.ion-color-danger{
 .button-modal-theme{
 	color: var(--ion-button-modal-theme);
 }
-.background-image-share-desing{
+/*.background-image-share-desing{
 	background-color: #fff;
 	opacity: 0;
 	position: absolute;
@@ -254,12 +242,12 @@ ion-button.ion-color-danger{
 	height: 100%;
 	left: 0;
 	z-index: 0;
-}
+}*/
 .image-share{
 	width: 100%;
 	border-radius: 5px;
 	color: white;
-	z-index: -1;
+	/*z-index: -1;*/
 	position: relative;
 	/*background-image: url("../../public/background/1.jpeg");*/
 	/*background-repeat: no-repeat;*/
@@ -323,7 +311,7 @@ ion-button.ion-color-danger{
 @media (min-width: 700px) {
     .image-share{
         width: 80%;
-        margin-left: 10%;
+        /*left: 10%;*/
     }
 }
 @media (min-height: 480px) {
@@ -335,6 +323,13 @@ ion-button.ion-color-danger{
     .image-share{
         max-height: 400px;
     }
+}
+#el{
+	width: 80%;
+	margin-left: 10%;
+}
+#el img{
+	width: 100%;
 }
 
 /* catalogo page */

@@ -1,7 +1,7 @@
 <template>
 	<ion-page>
-		<ion-content :fullscreen="true" class="ion-padding titillium-web-regular">
-			<div class="m-4 relative">
+		<ion-content :fullscreen="true" class="ion-padding titillium-web-regular m-0 p-0 no-padding">
+			<div class="relative">
 				<div id="my-node" v-show="photoHtml" class="image-share shadow border flex-row bg-gradient-to-r from-cyan-500 to-blue-500 relative">
 					<div class="block text-center justify-center mb-1">
 						<h1 class="title" id="photo-title">{{ product.name }}</h1>
@@ -32,11 +32,13 @@
 
 				</div>
 
-				<div class="background-image-share-desing"></div>
+				<!-- <div class="background-image-share-desing"></div> -->
 			</div>
 
-			<div id="el" class="w-full">
-				<img :src="myNode" alt="">
+			<div id="el" class="flex p-5">
+				<div class="col">
+					<img :src="myNode" alt="">
+				</div>
 			</div>
 		</ion-content>
 	</ion-page>
@@ -45,14 +47,15 @@
 <script setup lang="ts">
 /* ES6 */
 import * as htmlToImage from 'html-to-image';
-import {readFromStorage} from "@/utils/utils";
+import {readFromStorage, generarTimestamp} from "@/utils/utils";
 import {onMounted, ref} from "vue";
 import QRious from "qrious";
 import {Share} from "@capacitor/share";
 import {useRouter} from "vue-router";
 import {IonContent, IonPage} from "@ionic/vue";
-import { FileSharer } from '@byteowls/capacitor-filesharer';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { ScreenOrientation } from '@capacitor/screen-orientation';
+import { dialogShow, _log } from '@/utils/testing';
 
 const nameCompany = import.meta.env.VITE_NAME_COMPANY;
 const photoHtml = ref(true)
@@ -76,63 +79,65 @@ const share = ()=>{
 				// console.log(dataUrl)
 				photoHtml.value = false
 				myNode.value = dataUrl
+				//console.log(dataUrl)
 				setTimeout(async ()=>{
-					await handleShareImage()
-				}, 500)
+					await handleShareImage(myNode.value)
+				}, 100)
 			});
 	}catch (e){ /* empty */ }
 }
-const handleFileSharer = () => {
-	FileSharer.share({
-		filename: "share_product.jpeg",
-		contentType: "image/jpeg",
-		// If you want to save base64:
-		base64Data: myNode.value,
-		// If you want to save a file from a path:
-		// path: "../../file.pdf",
-	}).then(() => {
-		// do sth
-	}).catch(error => {
-		console.error("File sharing failed", error.message);
-	});
-}
-const handleShare = async () => {
-	await Share.share({
-		// title: 'See cool stuff',
-		// text: 'Really awesome thing you need to see right meow',
-		url: myNode.value,
-		// dialogTitle: 'Share with buddies',
-	}).finally(()=>{
-		router.push(previousLink)
-	})
-}
+
 async function handleShareImage(base64Data: string) {
-	const fileName = 'share_product.jpeg';
+	const fileName = `IMG_${generarTimestamp()}.png`;
 
-	// Guardar la imagen en un archivo local
-	await Filesystem.writeFile({
-		path: fileName,
-		data: base64Data,
-		directory: Directory.Cache,
-	});
+	try{
+		// Guardar la imagen en un archivo local
+		await Filesystem.writeFile({
+			path: fileName,
+			data: base64Data,
+			directory: Directory.Documents,
+		});
 
-	// Obtener la URI del archivo guardado
-	const uriResult = await Filesystem.getUri({
-		directory: Directory.Cache,
-		path: fileName,
-	});
+		// Obtener la URI del archivo guardado
+		const uriResult = await Filesystem.getUri({
+			directory: Directory.Documents,
+			path: fileName,
+		});
 
-	// Compartir el archivo
-	await Share.share({
-		title: 'Mi imagen compartida',
-		text: '¡Mira esta imagen!',
-		url: uriResult.uri,
-	}).finally(()=>{
+		// Compartir el archivo
+		await Share.share({
+			text: '¡Me encanto este producto asi que decidi compartirlo!',
+			url: uriResult.uri,
+		}).finally(async ()=>{
+			// Bloquear en modo apaisado
+			try{
+				await ScreenOrientation.lock({ orientation: 'portrait' });
+			}catch(e){/*empty */}
+			router.push(previousLink)
+
+		})
+	}catch(e){
+		//dialogShow('Error al guardar la imagen', e)
+		_log("Error al crear la image", "ImageShareTemplateOne", e)
 		router.push(previousLink)
-	})
+	}
 }
 
 const resizeTextToFitContainer = () => {
+	const content = document.querySelector("ion-content.no-padding")
+	const contentH = content?.clientHeight || 300
+	const heightMain = contentH - (contentH * .15) // menos un 15%
+
+	const myNode = document.getElementById('my-node')
+	myNode.style.height = `${heightMain}px`
+	//myNode.style.marginTop = `${heightMain - (heightMain * .90)}px`
+
+
+	const img = document.querySelector('.image-share .img img')
+	const heightImg = heightMain - (heightMain * .30) // menos un 30%
+	img.style.maxHeight = `${heightImg}px`
+
+
 	// const myNode = document.getElementById('my-node')
 	window.fitText( document.getElementById('photo-title'), 1.8)
 	window.fitText( document.getElementById(('photo-subtitle')), 2 )
@@ -142,14 +147,22 @@ window.addEventListener("orientationchange", function(){
 	resizeTextToFitContainer()
 });
 onMounted(async ()=>{
-	// await screen.orientation.lock('landscape-primary');
+	// Bloquear en modo apaisado
+	try{
+		await ScreenOrientation.lock({ orientation: 'landscape' }); // portrait
+	}catch(e){/*empty */}
 	const str = `${product.uuid}`
 	setTimeout(()=>{
 		generateQR(str)
 		resizeTextToFitContainer()
 		share()
-	}, 500)
+	}, 100)
 	// console.log(product)
 
 })
 </script>
+<style lang="css">
+	ion-content.no-padding::part(scroll){
+		padding: 0;
+	}
+</style>

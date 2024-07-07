@@ -1,6 +1,5 @@
 import {ToggleCustomEvent} from "@ionic/vue";
 import {ref} from "vue";
-import {saveToStorage, readFromStorage} from "@/utils/utils";
 
 export default class modeDark{
     useDark () {
@@ -11,19 +10,21 @@ export default class modeDark{
         // Add or remove the "ion-palette-dark" class on the html element
         const toggleDarkPalette = (shouldAdd: boolean) => {
             document.documentElement.classList.toggle('ion-palette-dark', shouldAdd);
-            saveToStorage('toggle_mode_dark', shouldAdd)
+            //saveToStorage('toggle_mode_dark', shouldAdd)
         };
 
         // Check/uncheck the toggle and update the palette based on isDark
         const initializeDarkPalette = (isDark: boolean) => {
-            const toggleModeDark = <boolean>readFromStorage('toggle_mode_dark')
+            console.log(isDark)
+            //const toggleModeDark = <boolean>readFromStorage('toggle_mode_dark')
+            const toggleModeDark = isDark
             if(toggleModeDark){
                 try{
                     toggleDarkPalette(toggleModeDark);
                     paletteToggle.value = toggleModeDark;
                 }catch(e){
                     console.log(e)
-                    saveToStorage('toggle_mode_dark', isDark)
+                    //saveToStorage('toggle_mode_dark', isDark)
                     paletteToggle.value = isDark;
                     toggleDarkPalette(isDark);
                 }

@@ -1,4 +1,39 @@
+import { ScreenOrientation } from '@capacitor/screen-orientation';
 
+export function generarTimestamp() {
+    // Ejemplo de uso:
+    //const nombreArchivo = `IMG_${generarTimestamp()}.jpg`;
+    //console.log(nombreArchivo); // Ejemplo de salida: "IMG_20240705_234734.jpg"
+
+
+    const fechaActual = new Date();
+    const anio = fechaActual.getFullYear();
+    const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // Asegura que el mes tenga dos dígitos
+    const dia = fechaActual.getDate().toString().padStart(2, '0'); // Asegura que el día tenga dos dígitos
+    const hora = fechaActual.getHours().toString().padStart(2, '0'); // Asegura que la hora tenga dos dígitos
+    const minutos = fechaActual.getMinutes().toString().padStart(2, '0'); // Asegura que los minutos tengan dos dígitos
+    const segundos = fechaActual.getSeconds().toString().padStart(2, '0'); // Asegura que los segundos tengan dos dígitos
+  
+    // Formato del timestamp: YYYYMMDD_HHMMSS
+    const timestamp = `${anio}${mes}${dia}_${hora}${minutos}${segundos}`;
+    return timestamp;
+}
+  
+
+  
+
+export const eventOrientation = () => {
+    window.addEventListener("orientationchange", function(){
+        const orientation = screen.orientation.type
+        //console.log(orientation); // e.g. portrait
+        if(orientation == 'landscape-primary' || orientation == 'landscape'){
+            // Bloquear en modo apaisado
+            try{
+                ScreenOrientation.lock({ orientation: 'landscape' }); // portrait
+            }catch(e){/*empty */}
+        }
+    });
+}
 // Utilizando Intl.DateTimeFormat
 export const formatDateToHuman = (fechaString:string) => {
     //const fechaString = "2024-06-21T10:43:00.032539+00:00";

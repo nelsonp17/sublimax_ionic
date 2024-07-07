@@ -30,9 +30,9 @@
 							<button class="bg-gray-50 border circle px-2 py-1 mr-3" @click="bottomShare">
 								<ion-icon class="center-icon favorite-icon" :icon="shareSocialOutline"/>
 							</button>
-							<button class="bg-gray-50 border circle px-2 py-1">
-								<ion-icon class="center-icon favorite-icon" :icon="heartOutline"/>
-<!--								<ion-icon class="center-icon favorite-icon" :icon="heart"/>-->
+							<button class="bg-gray-50 border circle px-2 py-1" @click="handleFavorite">
+								<ion-icon class="center-icon favorite-icon" :icon="heartOutline" v-if="!favorite"/>
+								<ion-icon class="center-icon favorite-icon" :icon="heart" v-else/>
 							</button>
 						</div>
 						<div class="swiper w-full swiper-main" :id="'swiper-product-'+product.id">
@@ -190,10 +190,9 @@ import {
 	IonToolbar,
 	IonButton,
 } from "@ionic/vue";
-import { Share } from '@capacitor/share';
 import ToolbarProduct from "@/components/tab2/ToolbarProduct.vue";
 import {onMounted, ref} from "vue";
-import {saveToStorage, readFromStorage, removeSpaceString} from "@/utils/utils";
+import {saveToStorage, readFromStorage, removeSpaceString, eventOrientation} from "@/utils/utils";
 import {useRoute, useRouter} from "vue-router";
 import ModalProduct from "@/components/tab2/ModalProduct.vue";
 import {supabase} from "@/utils/supabase";
@@ -207,12 +206,17 @@ const myModal = ref<InstanceType<typeof  ModalProduct> | null>(null)
 const user = ref({
 	admin: true
 })
+const favorite = ref(false)
 
 // const ion_content = ref('')
 const count = ref(0)
 const subtotal = ref(0)
 let swiper = '';
 
+const handleFavorite = () => {
+	favorite.value = !favorite.value
+}
+eventOrientation();
 const openModalHandler = () => {
 	// ion_content.value.$el.classList.add('not-scroll')
 	myModal.value?.open()

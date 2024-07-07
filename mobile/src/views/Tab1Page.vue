@@ -5,7 +5,7 @@
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 			<div id="container">
-				<p>Hola <br><b>{{ username }}</b></p>
+				<p class="mb-4">Hola <br><b>{{ user.name }}</b></p>
 				<ion-card class="card-1 mt-2">
 					<ion-card-content style="display: flex;">
 						<div style="margin: auto;" class="text-theme">
@@ -24,7 +24,7 @@
 				</ion-card>
 
 
-				<div class="mt-2" v-if="admin == true">
+				<div class="mt-2" v-if="user.role == 'admin' || user.role == 'root'">
 					<p class="text-theme"> <b>User Admin</b> </p>
 					<ion-card class="card-1">
 						<ion-card-content>
@@ -47,7 +47,7 @@
 
 
 					<ion-list :inset="true" style="margin-left: 0; margin-right: 0; padding:0" class="myList mt-2">
-						<ion-item :button="true" v-if="VITE_MODE_DEVELOPER == 'true'" @click="actionLink('/environment')">
+						<ion-item :button="true" v-if="user.role == 'root'" @click="actionLink('/environment')">
 							<ion-icon color="primary" slot="start" :icon="listCircle" size="large" style="margin-right: 10px"></ion-icon>
 							<ion-label>Environment</ion-label>
 							<ion-note slot="end">{{ tablesCount.environment }}</ion-note>
@@ -86,8 +86,7 @@
 														   style="float: right" /></ion-label>
 						</ion-item>
 						<ion-item>
-							<ion-label>Privacidad <ion-icon aria-hidden="true" :icon="chevronForward"
-															style="float: right" /></ion-label>
+							<ion-label>Privacidad <ion-icon aria-hidden="true" :icon="chevronForward" style="float: right" /></ion-label>
 						</ion-item>
 					</ion-list>
 					<ion-list class="myList" lines="none" style="margin-top: 0; padding-top:0">
@@ -104,12 +103,21 @@
 							>
 						</ion-item>
 						<ion-item>
-							<ion-label>Cerrar Sessión <ion-icon aria-hidden="true" :icon="exitOutline"
-																style="float: right" /></ion-label>
+							<ion-label>
+								Cerrar Sessión 
+								<ion-icon aria-hidden="true" :icon="exitOutline" style="float: right" @click="handleSignOut" />
+							</ion-label>
 						</ion-item>
 					</ion-list>
 				</div>
 			</div>
+
+			<ion-toast
+                :is-open="isOpen"
+                :message="toast.message"
+                :duration="toast.duration"
+                @didDismiss="setOpen(false)"
+            ></ion-toast>
 		</ion-content>
 	</ion-page>
 </template>
@@ -130,35 +138,40 @@ import {
 	IonToggle,
 	IonCardContent,
 	IonButton,
+	IonToast,
 } from '@ionic/vue';
-import {call, chevronForward, exitOutline, listCircle, personCircleOutline} from "ionicons/icons";
-
-const username = "Nelson";
-const email = "nelsonportillo982@gmail.com";
-const admin = true;
-
+import {call, chevronForward, exitOutline, listCircle, personCircleOutline, unlinkSharp} from "ionicons/icons";
+import { signOut, errorToast, checkAuth, session } from '@/utils/auth';
+import { useRoute, useRouter } from 'vue-router'
 import {ref, onMounted} from 'vue';
 import { supabase } from '@/utils/supabase'
-import { useRoute, useRouter} from 'vue-router'
 import modeDark from "@/utils/modeDark";
 
+const user = ref({
+	id: '',
+	email: '',
+	role: '',
+	name: '',
+})
+const isOpen = ref(false);
 const router = useRouter()
 const route = useRoute()
-
-defineProps({
-	username: String,
-	email: String,
-	admin: Boolean,
-});
+const toast = ref({
+    message: '',
+    duration: 5000,
+})
+const setOpen = (state: boolean) => {
+    isOpen.value = state;
+};
+const actionLink = (url: string) => {
+    router.push({ path: url })
+}
 
 const VITE_VERSION_APP = import.meta.env.VITE_VERSION_APP;
 const VITE_MODE_DEVELOPER = import.meta.env.VITE_MODE_DEVELOPER;
 const mD = new modeDark()
 const { paletteToggle, toggleChange } = mD.useDark()
 
-const actionLink = (url:string) => {
-	router.push({path:url})
-}
 const handleRefresh = async (event: CustomEvent) => {
 	setTimeout(async ()=>{
 		await getCountRow()
@@ -166,6 +179,7 @@ const handleRefresh = async (event: CustomEvent) => {
 		event.target.complete();
 	}, 2000)
 };
+
 // contidad de registros de las tablas
 const tablesCount = ref({
 	products: 0,
@@ -175,6 +189,19 @@ const tablesCount = ref({
 });
 
 async function getCountRow() {
+	const isAuth = await checkAuth()
+    if(!isAuth) {
+		actionLink('/auth')
+		return;
+	}
+
+	//user.value = session.session
+	const u = session.session.user
+	user.value.id = u.id
+	user.value.email = u.email
+	user.value.role = u.user_metadata.role
+	user.value.name = u.user_metadata.name
+	console.log(u)
 	// env
 	let { data: environment, error: errorEnv } = await supabase.from('environment').select('*', { count: 'exact' });
 	if (errorEnv) {
@@ -209,9 +236,22 @@ async function getCountRow() {
 	tablesCount.value.products = products.length;
 
 }
+async function handleSignOut(){
+	await signOut()
 
-onMounted(() => {
-	console.log("onMounted")
+    if(errorToast != ''){
+        toast.value.message = errorToast
+        console.log(errorToast)
+        setOpen(true)
+
+        return;
+    }
+    actionLink('/auth/')
+
+}
+onMounted(async () => {
+	
+
 	getCountRow()
 });
 

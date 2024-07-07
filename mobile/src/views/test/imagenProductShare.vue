@@ -47,6 +47,7 @@ import * as htmlToImage from 'html-to-image';
 import {readFromStorage} from "@/utils/utils";
 import {onMounted, ref, watch} from "vue";
 import {IonButton} from "@ionic/vue";
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import QRious from "qrious";
 
 const nameCompany = import.meta.env.VITE_NAME_COMPANY;
@@ -94,4 +95,51 @@ onMounted(async ()=>{
 	console.log(product)
 
 })
+
+
+const permission = () => {
+	Filesystem.checkPermissions({
+		directory: Directory.Documents
+	})
+	.then(permissions => {
+		if (permissions.granted) {
+			// Permisos concedidos, procede a crear la carpeta
+			createImageFolder();
+		} else {
+			// Solicitar permisos de almacenamiento
+			requestStoragePermissions();
+		}
+	})
+	.catch(error => {
+		console.error('Error al verificar permisos de almacenamiento:', error);
+	});
+}
+const requestStoragePermissions = () => {
+  Filesystem.requestPermissions({
+    directory: Directory.Documents
+  })
+  .then(permissions => {
+    if (permissions.granted) {
+      // Permisos concedidos, procede a crear la carpeta
+      createImageFolder();
+    } else {
+      console.error('Permisos de almacenamiento denegados');
+    }
+  })
+  .catch(error => {
+    console.error('Error al solicitar permisos de almacenamiento:', error);
+  });
+}
+const createImageFolder = () => {
+  Filesystem.mkdir({
+    path: 'Images', // Ruta de la carpeta a crear
+    directory: Directory.Documents // Directorio base donde crear la carpeta
+  })
+  .then(() => {
+    console.log('Carpeta "Images" creada exitosamente');
+  })
+  .catch(error => {
+    console.error('Error al crear la carpeta "Images":', error);
+  });
+}
 </script>

@@ -8,7 +8,7 @@ import Environment from '../views/operations/Environment.vue'
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
-		redirect: '/tabs/tab2'
+		redirect: '/background/'
 	},
 	{
 		path: '/tabs/',
@@ -33,6 +33,20 @@ const routes: Array<RouteRecordRaw> = [
 				component: () => import('@/views/Tab3Page.vue')
 			}
 		]
+	},
+	
+	{
+		path: '/background/',
+		component: () => import('@/views/Background.vue'),
+	},
+	{
+		path: '/auth/',
+		component: () => import('@/views/pages/Auth.vue'),
+		outlet: 'secondary'
+	},
+	{
+		path: '/auth/register/',
+		component: () => import('@/views/pages/Auth.vue'),
 	},
 	{
 		path: '/environment/',
@@ -68,7 +82,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/share_image/',
 		component: () => import('@/views/pages/ImageShareTemplateOne.vue'),
-		// outlet: 'secondary'
+		outlet: 'secondary'
 	},
 	{
 		path: '/test/',

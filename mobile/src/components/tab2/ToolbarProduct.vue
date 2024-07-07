@@ -36,6 +36,7 @@ const preCode = () => {
 }
 // Suponiendo que tienes una referencia al elemento de la barra de herramientas
 onMounted(()=>{
+	preCode()
 	setTimeout(()=> preCode(), 500)
 })
 

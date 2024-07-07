@@ -3,10 +3,10 @@
 	<ion-header>
 		<ion-toolbar>
 			<ion-buttons slot="start">
-				<ion-button @click="cancel()">Cancelar</ion-button>
+				<ion-button @click="cancel()" class="button-modal-theme">Cancelar</ion-button>
 			</ion-buttons>
 			<ion-buttons slot="end">
-				<ion-button :strong="true" @click="confirm()">Guardar</ion-button>
+				<ion-button :strong="true" @click="confirm()" class="button-modal-theme">Guardar</ion-button>
 			</ion-buttons>
 		</ion-toolbar>
 	</ion-header>
@@ -16,7 +16,7 @@
 				<div>Corrige los siguiente errores:<br/></div>
 				<div v-html="errorsForm"></div>
 			</div>
-			<p style="color: #212121"> 
+			<p>
 				<b v-if="isInsert">Agregar una subcategorías</b> 
 				<b v-else>Actualizar una subcategorías</b> 
 			</p>
@@ -52,8 +52,7 @@
 	import { caretDownSharp } from 'ionicons/icons';
 	import { onMounted, ref } from 'vue';
 	import { supabase } from '@/utils/supabase';
-	import { formValidCategory } from '@/utils/formValid';
-	import Category from '@/views/operations/Category.vue';
+	import { formValidSubcategory } from '@/utils/formValid';
 
 	const props = defineProps({
 		id: Number,
@@ -64,7 +63,7 @@
 
 	const form = ref({
 		name: '',
-		selectedCategory: '',
+		selectedCategory: 0,
 	});
 	let errorsForm = ref('');
 	let isInsert = true;
@@ -136,7 +135,7 @@
 	const cancel = () => modalController.dismiss(null, 'cancel');
 	const confirm = async () => {
 		errorsForm.value = '';
-		const validate = await formValidCategory(form.value);
+		const validate = await formValidSubcategory(form.value);
 
 		console.log(validate)
 		if(validate != true){

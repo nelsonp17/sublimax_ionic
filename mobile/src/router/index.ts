@@ -53,6 +53,10 @@ const routes: Array<RouteRecordRaw> = [
 		component: Environment,
 	},
 	{
+		path: '/user_admin/',
+		component: () => import('@/views/operations/UserAdmin.vue'),
+	},
+	{
 		path: '/categorys/',
 		component: () => import('@/views/operations/Category.vue'),
 	},
@@ -63,6 +67,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/products/',
 		component: () => import('@/views/operations/Product.vue'),
+		//outlet: 'secondary'
 	},
 	{
 		path: '/products/:product_id/',
@@ -79,6 +84,11 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/operations/ProductEdit.vue'),
 		// outlet: 'secondary'
 	},
+	{
+		path: '/cart/',
+		component: () => import('@/views/pages/CartShopping.vue'),
+	},
+	
 	{
 		path: '/share_image/',
 		component: () => import('@/views/pages/ImageShareTemplateOne.vue'),

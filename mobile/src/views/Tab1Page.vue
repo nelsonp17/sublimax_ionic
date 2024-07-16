@@ -47,25 +47,31 @@
 
 
 					<ion-list :inset="true" style="margin-left: 0; margin-right: 0; padding:0" class="myList mt-2">
-						<ion-item :button="true" v-if="user.role == 'root'" @click="actionLink('/environment')">
+						<ion-item :button="true" v-if="user.role == 'root'" @click="actionLink('/environment/')">
 							<ion-icon color="primary" slot="start" :icon="listCircle" size="large" style="margin-right: 10px"></ion-icon>
 							<ion-label>Environment</ion-label>
 							<ion-note slot="end">{{ tablesCount.environment }}</ion-note>
 						</ion-item>
 
-						<ion-item :button="true" @click="actionLink('/categorys')">
+						<ion-item :button="true" v-if="user.role == 'root'" @click="actionLink('/user_admin/')">
+							<ion-icon color="primary" slot="start" :icon="listCircle" size="large" style="margin-right: 10px"></ion-icon>
+							<ion-label>Usuarios Admin</ion-label>
+							<ion-note slot="end">{{ tablesCount.users_a }}</ion-note>
+						</ion-item>
+
+						<ion-item :button="true" @click="actionLink('/categorys/')">
 							<ion-icon color="primary" slot="start" :icon="listCircle" size="large" style="margin-right: 10px"></ion-icon>
 							<ion-label>Categorías</ion-label>
 							<ion-note slot="end">{{ tablesCount.category }}</ion-note>
 						</ion-item>
 
-						<ion-item :button="true" @click="actionLink('/subcategorys')">
+						<ion-item :button="true" @click="actionLink('/subcategorys/')">
 							<ion-icon color="primary" slot="start" :icon="listCircle" size="large" style="margin-right: 10px"></ion-icon>
 							<ion-label>Subcategorías</ion-label>
 							<ion-note slot="end">{{ tablesCount.subcategory }}</ion-note>
 						</ion-item>
 
-						<ion-item :button="true" @click="actionLink('/products')">
+						<ion-item :button="true" @click="actionLink('/products/')">
 							<ion-icon color="primary" slot="start" :icon="listCircle" size="large" style="margin-right: 10px"></ion-icon>
 							<ion-label>Productos</ion-label>
 							<ion-note slot="end">{{ tablesCount.products }}</ion-note>
@@ -117,6 +123,7 @@
                 :message="toast.message"
                 :duration="toast.duration"
                 @didDismiss="setOpen(false)"
+				@click="setOpen(false)"
             ></ion-toast>
 		</ion-content>
 	</ion-page>
@@ -155,7 +162,6 @@ const user = ref({
 })
 const isOpen = ref(false);
 const router = useRouter()
-const route = useRoute()
 const toast = ref({
     message: '',
     duration: 5000,
@@ -172,6 +178,7 @@ const VITE_MODE_DEVELOPER = import.meta.env.VITE_MODE_DEVELOPER;
 const mD = new modeDark()
 const { paletteToggle, toggleChange } = mD.useDark()
 
+
 const handleRefresh = async (event: CustomEvent) => {
 	setTimeout(async ()=>{
 		await getCountRow()
@@ -185,7 +192,8 @@ const tablesCount = ref({
 	products: 0,
 	category: 0,
 	subcategory: 0,
-	environment: 0
+	environment: 0,
+	users_a: 0,
 });
 
 async function getCountRow() {
@@ -202,6 +210,12 @@ async function getCountRow() {
 	user.value.role = u.user_metadata.role
 	user.value.name = u.user_metadata.name
 	console.log(u)
+	// env
+	let { data: users_a, error: errorUsers } = await supabase.from('user_admin').select('*', { count: 'exact' });
+	if (errorUsers) {
+		console.error('Error al obtener el número de registros:', errorUsers.message);
+		return;
+	}
 	// env
 	let { data: environment, error: errorEnv } = await supabase.from('environment').select('*', { count: 'exact' });
 	if (errorEnv) {
@@ -230,10 +244,11 @@ async function getCountRow() {
 	}
 
 
-	tablesCount.value.environment = environment.length;
-	tablesCount.value.subcategory = subcategory.length;
-	tablesCount.value.category = category.length;
-	tablesCount.value.products = products.length;
+	tablesCount.value.environment = environment?.length||0;
+	tablesCount.value.subcategory = subcategory?.length||0;
+	tablesCount.value.category = category?.length||0;
+	tablesCount.value.products = products?.length||0;
+	tablesCount.value.users_a = users_a?.length ||0;
 
 }
 async function handleSignOut(){
@@ -249,9 +264,7 @@ async function handleSignOut(){
     actionLink('/auth/')
 
 }
-onMounted(async () => {
-	
-
+onMounted(() => {
 	getCountRow()
 });
 

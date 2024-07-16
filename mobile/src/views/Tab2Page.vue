@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import { IonContent, IonIcon, IonPage, IonPopover, IonRefresher, IonRefresherContent, IonButton } from '@ionic/vue';
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onBeforeUpdate, onMounted, reactive, ref } from "vue";
 import { supabase } from "@/utils/supabase";
 import { caretDown } from "ionicons/icons";
 import { checkAuth, session } from '@/utils/auth';
@@ -94,13 +94,12 @@ import Searchbar from "@/components/tab2/Searchbar.vue";
 import { saveToStorage } from "@/utils/utils";
 //import {requestStoragePermissions, requestCameraPermissions, checkCameraPermissions, checkStoragePermissions, takePicture} from "@/utils/permission";
 
-
 import { Camera, CameraResultType } from '@capacitor/camera';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { _log } from '@/utils/testing'
+import { useRoute } from 'vue-router';
 
 const imageElement = ref('')
-
+const route = useRoute()
 async function pickImages() {
 	const pickedImages = await Camera.getPhoto({
 		quality: 100, // Set image quality (0-100)
@@ -205,13 +204,39 @@ const preCode = () => {
 }
 async function getCountRow() {
 	// env
-	let { data: products, error: errorEnv } = await supabase.from('products').select('*', { count: 'exact' });
-	if (errorEnv) {
-		console.error('Error al obtener el número de registros:', errorEnv.message);
+	let { data: envs, error: errorEnv } = await supabase.from('environment').select('*');
+	if(!errorEnv){
+		envs?.forEach((env, index)=>{
+			// metodo de pagos
+			if(env.name == 'method_payment'){
+				saveToStorage('method_payment', env)
+			}
+			// whatsapp numero
+			if(env.name == 'whatsapp'){
+				saveToStorage('whatsapp', env)
+			}
+			// whatsapp mensaje
+			if(env.name == 'whatsapp_message'){
+				saveToStorage('whatsapp_message', env)
+			}
+		})
+	}
+
+	// product
+	let { data: products, error: errorProd } = await supabase.from('products').select('*', { count: 'exact' });
+	if (errorProd) {
+		console.error('Error al obtener el número de registros:', errorProd.message);
 		return;
 	}
 	counts.value.products = <number>products?.length;
 }
+onBeforeUpdate(()=>{
+	if(route.path == '/tabs/tab2/'){
+		//console.log('hola')
+		preCode()
+	}
+	//console.log( route.path )
+})
 
 const fetchData = async () => {
 	const offset = (pagination.currentPage - 1) * pagination.pageSize
@@ -238,8 +263,8 @@ const { pageNumbers, handlePageChange } = usePagination(pagination, fetchData);
 
 onMounted(async () => {
 	//await checkAuth()
-	setTimeout(() => preCode(), 500)
-	setTimeout(() => preCode(), 1000)
+	//setTimeout(() => preCode(), 500)
+	//setTimeout(() => preCode(), 1000)
 	await getCountRow();
 
 	setTimeout(async() => await fetchData(), 1000)

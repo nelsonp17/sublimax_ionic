@@ -55,11 +55,13 @@
                                 </div>
                                 <div>
                                     <button :disabled="loading" type="button" v-if="isPage=='login'" @click.prevent="handleClickLogin"
-                                        class="w-full flex justify-center bg-purple-800  hover:bg-purple-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500">
+                                        class="w-full flex justify-center bg-purple-800  hover:bg-purple-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
+                                        :class="{'bg-purple-300': loading}">
                                         Iniciar
                                     </button>
                                     <button :disabled="loading" type="button" v-if="isPage=='register'" @click.prevent="handleClickRegister"
-                                        class="w-full flex justify-center bg-purple-800  hover:bg-purple-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500">
+                                        class="w-full flex justify-center bg-purple-800  hover:bg-purple-700 text-gray-100 p-3  rounded-lg tracking-wide font-semibold  cursor-pointer transition ease-in duration-500"
+                                        :class="{'bg-purple-300': loading}">
                                         Registrarse
                                     </button>
                                 </div>
@@ -204,6 +206,7 @@ const handleClickLogin = async () => {
         toast.value.message = errorToast
         console.log(errorToast)
         setOpen(true)
+        loading.value = false
         return;
     }
     setTimeout(()=>init(), 2000);
@@ -217,6 +220,7 @@ const handleClickRegister = async () => {
         toast.value.message = errorToast
         console.log(errorToast)
         setOpen(true)
+        loading.value = false
         return;
     }
     setTimeout(()=>init(), 2000);

@@ -46,6 +46,7 @@ import "./theme/styles.css";
 import { askForCameraPermission } from "./utils/permission";
 import { checkAuth } from '@/utils/auth';
 import modeDark from "@/utils/modeDark";
+import { eventStorage, readFromStorage } from "./utils/utils";
 
 // middlewares
 router.beforeEach(async (to, from) => {
@@ -54,27 +55,27 @@ router.beforeEach(async (to, from) => {
 	const isAuth = await checkAuth()
 	if(to.path == '/background/' || to.path == '/background'){
 		if(isAuth){
-			console.log("pasa...")
+			//console.log("pasa...")
 			return { path: '/tabs/tab2/' }
 		}
 		else{
-			console.log('autentifica...')
+			//console.log('autentifica...')
 			return { path: '/auth/' }
 		}
 	}else if(to.path == '/auth/' || to.path == '/auth' || to.path == '/auth/register/' || to.path == '/auth/register/'){
 		if(isAuth){
-			console.log("pasa...")
+			//console.log("pasa...")
 			return { path: '/tabs/tab2/' }
 		}
 	}else{
 		// si no esta logeado
 		if(!isAuth){
-			console.log("autentifica...")
+			//console.log("autentifica...")
 			return { path: '/auth/' }
 		}
 	}
-	console.log(to)
-	console.log(to.path)
+	//console.log(to)
+	//console.log(to.path)
 
 	
 	// explicitly return false to cancel the navigation
@@ -85,14 +86,25 @@ router.beforeResolve(async (to) => {
 	// evento modo oscuro/claro
 	new modeDark().useDark();
 
+	// evento del cambio de pestaña
+	eventStorage(function(event){
+		//console.log("el nuevo valor, es: " + event.newValue)
+		//console.log("Storage key: " + event.key)
+		if(event.key=='changeView'){}
+		
+	})
+	
+	
+	
+
 	// permisos de la camara
 	//await askForCameraPermission()
 });
 
-
-
+ 
+const isQuery = await readFromStorage('isQuery') || false
 const app = createApp(App).use(IonicVue).use(router);
-
+app.provide('isQuery', isQuery)
 router.isReady().then(() => {
 	app.mount("#app");
 });

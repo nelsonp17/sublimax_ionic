@@ -34,9 +34,9 @@
 					Último QR: <b>{{ result }}</b>
 				</p>
 
-				<p class="error" v-if="_debugger">{{ error }}</p>
+				<p class="error" v-if="_debugger" style="border: 2px solid black; display: none">{{ error }}</p>
 
-				<div style="border: 2px solid black">
+				<div style="border: 2px solid black; display: none">
 					<qrcode-stream :track="paintBoundingBox" @detect="onDetect" @error="onError"></qrcode-stream>
 				</div>
 

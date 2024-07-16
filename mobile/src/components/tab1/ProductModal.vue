@@ -20,7 +20,7 @@
 				<b v-if="isInsert">Agregar un producto</b> 
 				<b v-else>Actualizar un producto</b> 
 			</p>
-			<ion-item class="mt-min">
+			<ion-item class="my-2">
 				<ion-input
 					label="Nombre"
 					label-placement="stacked"
@@ -28,7 +28,7 @@
 					v-model="form.name"
 				></ion-input>
 			</ion-item>
-			<ion-item class="mt-min">
+			<ion-item class="my-2">
 				<ion-input
 					label="Descripción"
 					label-placement="stacked"
@@ -36,7 +36,7 @@
 					v-model="form.description"
 				></ion-input>
 			</ion-item>
-			<ion-item class="mt-min">
+			<ion-item class="my-2">
 				<ion-input
 					label="Precio ($)"
 					label-placement="stacked"
@@ -44,7 +44,7 @@
 					v-model="form.price"
 				></ion-input>
 			</ion-item>
-			<ion-item class="mt-min">
+			<ion-item class="my-2">
 				<ion-input
 					label="Identificador"
 					label-placement="stacked"
@@ -54,8 +54,20 @@
 			</ion-item>
 
 			<ion-select 
+				v-model="form.stock"
+				class="always-flip my-2"
+				:toggle-icon="caretDownSharp"
+				interface="popover"
+				label="Stock"
+				placeholder="Seleccione una opción"
+			>
+				<ion-select-option :value="true">Si</ion-select-option>
+				<ion-select-option :value="false">No</ion-select-option>
+			</ion-select>
+
+			<ion-select 
 				v-model="form.selectedSubcategory"
-				class="always-flip mt-min"
+				class="always-flip my-2"
 				:toggle-icon="caretDownSharp"
 				interface="popover"
 				label="Subcategoría"
@@ -72,8 +84,17 @@
 					label-placement="stacked"
 					type="text"
 					v-model="form.tags"
+					@focusout="eventTag"
+					@keypress="eventTag(false)"
 				></ion-input>
 			</ion-item>
+
+			<div class="text-theme mb-5" v-if="myTags.length > 0">
+				<ion-chip class="mt-3" v-for="(tag,i) in myTags" :key="i">
+					<ion-icon :icon="pricetagOutline" color="primary"></ion-icon>
+					<ion-label>{{ tag }}</ion-label>
+				</ion-chip>
+			</div>
 
 			<div v-if="isInsert==false" class="">
 				<div v-if="firstImage">
@@ -87,13 +108,20 @@
 			</div>
 			<ion-button class="mt-min mb-2" color="danger" expand="block" v-if="isInsert==false" @click="deleteRow">Eliminar</ion-button>
 		</div>
+		<ion-toast
+			:is-open="toast.isOpen"
+			:message="toast.message"
+			:duration="toast.duration"
+			@didDismiss="toast.isOpen=false"
+			@click="toast.isOpen=false"
+		></ion-toast>
 	</ion-content>
 </template>
 
 <script setup lang="ts">
-	import { IonText, IonSelect, IonSelectOption, actionSheetController, modalController, IonInput, IonButtons, IonHeader, IonToolbar, IonContent, IonButton, IonItem} from '@ionic/vue';
-	import { caretDownSharp } from 'ionicons/icons';
-	import { Ref, onMounted, ref } from 'vue';
+	import { IonText, IonSelect, IonSelectOption, actionSheetController, modalController, IonInput, IonButtons, IonHeader, IonToolbar, IonContent, IonButton, IonItem, IonChip, IonIcon, IonLabel, IonToast } from '@ionic/vue';
+	import { caretDownSharp, pricetagOutline } from 'ionicons/icons';
+	import { Ref, onMounted, reactive, ref } from 'vue';
 	import { supabase } from '@/utils/supabase';
 	import { formValidProduct, formValidImage } from '@/utils/formValid';
 	import { generateUniqueProductID, } from '@/utils/utils';
@@ -101,6 +129,7 @@
 
 	const router = useRouter()
 	const route = useRoute()
+	const myTags = ref([]);
 
 	const props = defineProps({
 		id: Number,
@@ -109,8 +138,14 @@
 		tags: String,
 		uuid: String,
 		subcategory_id: Number,
-		price: Number
+		price: Number,
+		stock: Boolean,
 	});
+	const toast = reactive({
+		isOpen: false,
+		duration: 500,
+		message: '',
+	})
 
 	const form = ref({
 		name: '',
@@ -118,7 +153,8 @@
 		tags: '',
 		uuid: '',
 		price: 0,
-		selectedSubcategory: 0
+		selectedSubcategory: 0,
+		stock: false,
 	});
 	let errorsForm = ref('');
 	let product_id = ref(0);
@@ -147,6 +183,14 @@
 	}
 	if(props.tags!=undefined){
 		form.value.tags = props.tags;
+		try{
+			myTags.value = props.tags.split(", ");
+		}catch(e){
+			console.log(e)
+			toast.message = "El formato de la etiqueta no es válido. Debe estar separado por coma."
+			toast.isOpen = true
+			toast.duration = 2000
+		}
 	}
 	if(props.uuid!=undefined){
 		form.value.uuid = props.uuid;
@@ -157,7 +201,9 @@
 	if(props.subcategory_id!=undefined){
 		form.value.selectedSubcategory = props.subcategory_id;
 	}
-
+	if(props.stock!=undefined){
+		form.value.stock = props.stock;
+	}
 	if(props.name!=undefined && props.id!=undefined){
 		isInsert=false;
 		getFirstImage()
@@ -166,6 +212,19 @@
 	const manageImage = async () => {
 		modalController.dismiss(null, 'cancel')
 		router.push({ path: `/products/${props.id}/images`, replace: true })
+	}
+	const eventTag = (isMessage:boolean=true) => {
+		//console.log(form.value.tags)
+		try{
+			myTags.value = form.value.tags.split(", ");
+		}catch(e){
+			console.log(e)
+			if(isMessage){
+				toast.message = "El formato de la etiqueta no es válido. Debe estar separado por coma."
+				toast.isOpen = true
+				toast.duration = 2000
+			}
+		}
 	}
 
 	async function insert(){
@@ -178,7 +237,8 @@
 					tags: form.value.tags, 
 					uuid: form.value.uuid, 
 					price: form.value.price, 
-					subcategory_id: form.value.selectedSubcategory
+					subcategory_id: form.value.selectedSubcategory,
+					stock: form.value.stock,
 				}
 			)
 			.select('*')
@@ -202,7 +262,8 @@
 					tags: form.value.tags, 
 					uuid: form.value.uuid, 
 					price: form.value.price, 
-					subcategory_id: form.value.selectedSubcategory
+					subcategory_id: form.value.selectedSubcategory,
+					stock: form.value.stock,
 				}
 			)
 			.eq('id', props.id)

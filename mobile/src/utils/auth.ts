@@ -15,14 +15,19 @@ export const checkAuth = async () => {
     }
     
     session = user;
+    saveToStorage('user', session)
+
+    const email = (session.session!=null) ? session.session.user.email : ''
+    await findIsUserAdmin(email)
 
     if(!user.session){
+        ///saveToStorage('role', 'client')
         console.log('No esta autentificado')
         return false;
     }
     //console.log('Esta autentificado')
     //console.log(user)
-
+    
     return true
 }
 
@@ -42,6 +47,7 @@ export const signOut = async () => {
 }
 
 export const login = async (userForm: { email:string, password: string }) => {
+    await findIsUserAdmin(userForm.email)
     let { data, error } = await supabase.auth.signInWithPassword(userForm)
 
     if(error) {
@@ -77,14 +83,32 @@ const errorCodes = (error:any) => {
     console.log(error.status)
     console.log(error.message)
 }
+
+export const findIsUserAdmin = async (email:string) => {
+    let role = 'client'
+    try{
+        const {data:user} = await supabase.from('user_admin').select('*').eq('email', email)
+        
+        //console.log(user)
+        if (user){
+            role = user[0].role
+        }
+        
+    }catch(e){/* */}
+
+    saveToStorage('role', role)
+    return role
+}
 export const register = async (userForm: { email:string, password: string, name: string }) => {
+    const role = await findIsUserAdmin(userForm.email);
+
     let { data, error } = await supabase.auth.signUp(
         {
             email: userForm.email, 
             password: userForm.password,
             options: {
                 data: {
-                    role: 'client',
+                    role,
                     name: userForm.name,
                 }
             }

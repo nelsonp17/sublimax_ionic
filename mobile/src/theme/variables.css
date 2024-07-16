@@ -1,14 +1,14 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 
-
+/** https://coolors.co/palette/03045e-023e8a-0077b6-0096c7-00b4d8-48cae4-90e0ef-ade8f4-caf0f8 **/
 /* Tema oscuro */
 :root {
-    --ion-color-primary: #0077B6; /* Blanco grisáceo */
+    --ion-color-primary: #00BFFF; /* Blanco grisáceo */
 
-    --ion-color-secondary: #ADE8F4; /* Blanco perla */
+    --ion-color-secondary: #48CAE4; /* Blanco perla */
 
-    --ion-color-tertiary: #C2E0FA; /* Azul claro */
+    --ion-color-tertiary: #0D98BA; /* Azul claro */
 
     --ion-color-text: #000; /* Azul celeste brillante */
 
@@ -23,7 +23,7 @@ http://ionicframework.com/docs/theming/ */
     /*--ion-tab-bar-color: #000;*/
 
     --ion-button-modal-theme: #000;
-
+    
 }
 
 /* Tema oscuro */

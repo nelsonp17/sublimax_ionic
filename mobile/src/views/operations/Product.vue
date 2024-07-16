@@ -3,9 +3,9 @@
 		<ion-header>
 			<ion-toolbar>
 				<ion-title>
-					<router-link to="/tabs/tab1">
+					<a href="#" @click.prevent="setPreLink">
 						<ion-icon :icon="arrowBack" style="margin-right: 10px;"></ion-icon>
-					</router-link>
+					</a>
 					Productos
 				</ion-title>
 			</ion-toolbar>
@@ -15,9 +15,9 @@
 			<ion-header collapse="condense">
 				<ion-toolbar>
 					<ion-title size="large">
-						<router-link to="/tabs/tab1">
+						<a href="#" @click.prevent="setPreLink">
 							<ion-icon :icon="arrowBack" style="margin-right: 10px;"></ion-icon>
-						</router-link>
+						</a>
 						Productos
 					</ion-title>
 				</ion-toolbar>
@@ -118,28 +118,70 @@ import {
 import {arrowBack, chevronForward} from 'ionicons/icons';
 import ProductModal from '../../components/tab1/ProductModal.vue';
 import {supabase} from '@/utils/supabase';
-import {buscarCoincidencias, formatDateToHuman} from '@/utils/utils';
-import {onMounted, ref} from 'vue';
+import {buscarCoincidencias, formatDateToHuman, readFromStorage, saveToStorage} from '@/utils/utils';
+import {computed, inject, onBeforeUpdate, onMounted, ref, watch} from 'vue';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 
 const products = ref([]);
 const rows = ref([]);
+const route = useRoute();
+const router = useRouter();
+const toUrl = computed(async ()=>{
+	const previousLink = await readFromStorage('previousLink') || null
+	if(previousLink!=null && previousLink!='' || previousLink!=undefined){
+		return previousLink
+	}
+	return '/tabs/tab1/'
+})
+const onLoad = ref(false)
+const setPreLink = async () =>{
+	const link = await toUrl.value
+	onLoad.value = false;
+	saveToStorage('previousLink', '')
+	saveToStorage('isQuery', false)
+	route.query.editing = null
+	//console.log(link)
+	router.push(link)
+}
+
+onBeforeUpdate(()=>{
+	if(route.path == '/products/'){
+		//console.log('hola')
+		getRows()
+	}
+	//console.log( route.path )
+})
 
 async function getRows() {
+	if(onLoad.value){ return; }
+
 	const {data: products} = await supabase
 		.from('products')
-		.select(`id, created_at, name, description, price, tags, uuid, subcategory_id, subcategorys (name)`)
+		.select(`id, created_at, name, description, price, tags, uuid, stock, colors, subcategory_id, subcategorys (name)`)
 		.order('name');
 
 	if (products?.length > 0) {
 		products.value = products
 	}
 	rows.value = products.value
-	console.log(products)
+	
+	if(route.query){
+		if(route.query.editing){
+			products.value.forEach((elem, index)=>{
+				if(elem.id==route.query.editing){
+					console.log(elem)
+					edit(elem)
+				}
+			})
+		}
+	}
+	onLoad.value = true;
+	//console.log(products)
 }
-
-onMounted(async () => {
-	await getRows()
+onMounted(() => {
+	getRows()
 })
+
 
 const buscar = (event: { target: { value: any; }; }) => {
 	const textoBusqueda = event.target.value;
@@ -152,18 +194,22 @@ const buscar = (event: { target: { value: any; }; }) => {
 	console.log('Texto de búsqueda:', textoBusqueda);
 
 }
-
+let modal = null
 const abrirModal = async () => {
-	const modal = await modalController.create({
-		component: ProductModal, // El componente modal que generaste
-	});
-	await modal.present();
+	if(modal==null){
+		modal = await modalController.create({
+			component: ProductModal, // El componente modal que generaste
+		});
 
-	const {role} = await modal.onWillDismiss();
+		await modal.present();
 
-	if (role === 'confirm') {
-		await getRows()
+		const {role} = await modal.onWillDismiss();
+
+		if (role === 'confirm') {
+			await getRows()
+		}
 	}
+	
 };
 
 const edit = async (row) => {

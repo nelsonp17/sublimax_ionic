@@ -15,7 +15,7 @@ export default class modeDark{
 
         // Check/uncheck the toggle and update the palette based on isDark
         const initializeDarkPalette = (isDark: boolean) => {
-            console.log(isDark)
+            //console.log(isDark)
             //const toggleModeDark = <boolean>readFromStorage('toggle_mode_dark')
             const toggleModeDark = isDark
             if(toggleModeDark){
@@ -23,7 +23,7 @@ export default class modeDark{
                     toggleDarkPalette(toggleModeDark);
                     paletteToggle.value = toggleModeDark;
                 }catch(e){
-                    console.log(e)
+                    //console.log(e)
                     //saveToStorage('toggle_mode_dark', isDark)
                     paletteToggle.value = isDark;
                     toggleDarkPalette(isDark);

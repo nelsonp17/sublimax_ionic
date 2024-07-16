@@ -18,9 +18,6 @@ export function generarTimestamp() {
     const timestamp = `${anio}${mes}${dia}_${hora}${minutos}${segundos}`;
     return timestamp;
 }
-  
-
-  
 
 export const eventOrientation = () => {
     window.addEventListener("orientationchange", function(){
@@ -34,6 +31,19 @@ export const eventOrientation = () => {
         }
     });
 }
+
+export const eventStorage = (callback:Function) => {
+    window.addEventListener('storage', function handleStorageChange(event) {
+        //const key = event.key
+        //const newValue = event.newValue
+        //console.log('Storage key:', event.key);
+        //console.log('New value:', event.newValue);
+        callback(event)
+        
+        // Perform actions based on the storage change
+    });
+}
+
 // Utilizando Intl.DateTimeFormat
 export const formatDateToHuman = (fechaString:string) => {
     //const fechaString = "2024-06-21T10:43:00.032539+00:00";
@@ -83,9 +93,9 @@ export function saveToStorage<T>(key: string, data: string | number | boolean | 
         }else if(tipo == 'object'){
             localStorage.setItem(key, JSON.stringify(data));
         }
-        console.log(`Datos guardados en storage: ${key}`);
+        //console.log(`Datos guardados en storage: ${key}`);
     } catch (error) {
-        console.error(`Error al guardar datos en storage: ${error}`);
+        //console.error(`Error al guardar datos en storage: ${error}`);
     }
 }
 
@@ -95,7 +105,7 @@ export function readFromStorage<T>(key: string): string | number | boolean | T |
         if (dataString) {
             return JSON.parse(dataString) as T;
         } else {
-            console.log(`No se encontraron datos en storage para la clave: ${key}`);
+            //console.log(`No se encontraron datos en storage para la clave: ${key}`);
             return null;
         }
     } catch (error) {
@@ -103,11 +113,11 @@ export function readFromStorage<T>(key: string): string | number | boolean | T |
             if (dataString) {
                 return dataString;
             } else {
-                console.log(`No se encontraron datos en storage para la clave: ${key}`);
+                //console.log(`No se encontraron datos en storage para la clave: ${key}`);
                 return null;
             }
         } catch (error) {
-            console.error(`Error al leer datos del storage: ${error}`);
+            //console.error(`Error al leer datos del storage: ${error}`);
             return null;
         }
     }

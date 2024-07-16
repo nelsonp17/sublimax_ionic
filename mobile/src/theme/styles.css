@@ -81,6 +81,14 @@ html {
 	--ion-font-family: "Titillium Web", sans-serif !important;
 }
 
+select::after{
+	content: ''!important;
+	position: absolute!important;
+	right: 80px!important; 
+	margin-right: 80px!important;
+	width: 100px!important;
+	padding-right: 10px!important;
+}
 a {
 	text-decoration: none;
 	color: inherit;
@@ -222,7 +230,7 @@ ion-content.not-scroll::part(scroll){
 	color: var(--ion-color-text-secondary);
 }
 .text-theme{
-	color: var(--ion-color-text);
+	color: var(--ion-color-text)!important;
 }
 ion-fab-button ion-icon, ion-button{
 	color: var(--ion-color-text-primary);
@@ -232,6 +240,9 @@ ion-button.ion-color-danger{
 }
 .button-modal-theme{
 	color: var(--ion-button-modal-theme);
+}
+ion-list#no-padding{
+	margin: 0!important;
 }
 /*.background-image-share-desing{
 	background-color: #fff;

@@ -25,6 +25,7 @@ npx cap run android --prod
 ionic cap run android -l --external
 ionic cap run android --prod -l --external
 
+ionic capacitor add android
 ionic platform remove android
 ionc resource 
 
@@ -38,9 +39,6 @@ ngrok http [http://localhost:8100](http://localhost:8100)
 [https://gruhn.github.io/vue-qrcode-reader/demos/FullDemo.html](https://gruhn.github.io/vue-qrcode-reader/demos/FullDemo.html)
 
 
-# Configuracion capacitor
-[https://capacitorjs.com/docs/config](https://capacitorjs.com/docs/config)
-
 # Version Android
 \android\app\build.gradle
 
@@ -49,6 +47,10 @@ Archivo > Estructura del proyecto > Módulos > Configuración predeterminada
 
 Config.xml eliminado en Cordova, consulte [https://capacitorjs.com/docs/cordova#native-project-management](https://capacitorjs.com/docs/cordova#native-project-management)
 
+
+
+# Configuracion capacitor
+[https://capacitorjs.com/docs/config](https://capacitorjs.com/docs/config)
 
 # Archivo de configuración Capacitor "capacitor.config.ts" para producción
 Un archivo de configuración Capacitor "capacitor.config.ts" para producción debe incluir lo siguiente:
@@ -140,3 +142,19 @@ explore mas contenido con este sdk [https://ionic.io/docs/appflow/deploy/setup/c
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+
+
+
+<uses-permission android:name="android.permission.INTERNET" />
+<!-- To get access to the camera. -->
+<uses-permission android:name="android.permission.CAMERA" />
+<!-- To get access to the flashlight. -->
+<uses-permission android:name="android.permission.FLASHLIGHT"/>
+
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+
+
